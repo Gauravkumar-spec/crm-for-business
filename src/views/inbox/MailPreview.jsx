@@ -11,7 +11,9 @@ const MailPreview = () => {
     const [msg, setMsg] = useState(null);
     const [loading, setLoading] = useState(false);
     const markedOnceRef = useRef(false);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    console.log("Auth provider:- ", authProvider?.options?.account?.idToken);
 
     useEffect(() => {
         let disposed = false;
