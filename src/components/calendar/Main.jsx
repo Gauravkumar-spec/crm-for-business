@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Client } from "@microsoft/microsoft-graph-client";
 import Loader from "../loading-ui/Main.jsx";
 import { useSelector } from "react-redux";
+import tippy from "tippy.js";
 
 function Main(props) {
     const [events, setEvents] = useState([]);
@@ -26,7 +27,7 @@ function Main(props) {
         return `${year}-${month}-${day}`;
     }
 
-    console.log("Events", events);
+    // console.log("Events", events);
 
     async function fetchEvents() {
         setLoading(true);
@@ -35,23 +36,61 @@ function Main(props) {
             const res = await client.api("/me/events").get();
 
             if (res) {
-                console.log(res.value);
+                // console.log(res.value);
                 res?.value.map((v) => {
                     resultArr.push({
                         title: v.subject,
                         start: formatDateToYYYYMMDD(new Date(v.start?.dateTime)),
                         end: formatDateToYYYYMMDD(new Date(v.end?.dateTime)),
+                        description: v?.bodyPreview || "No Description",
                     });
                 });
             }
 
-            setEvents(resultArr)
+            setEvents(resultArr);
         } catch (error) {
             console.log("Error fetching events", error);
         } finally {
             setLoading(false);
         }
     }
+
+    const handleEventDidMount = (info) => {
+        const event = info.event;
+
+        const title = event._def?.title || "No title";
+
+        const matchedEvent = events.find(
+            (event) => event.start === formatDateToYYYYMMDD(info.event.start)
+        );
+
+        const description = matchedEvent?.description || "No Description";
+
+        const start = info.event.start
+            ? new Date(info.event.start).toLocaleString()
+            : "No start date";
+
+        const content = `
+    <div class="w-60 rounded-xl shadow-2xl bg-white p-3 text-xs text-gray-800 font-medium">
+      <h5 class="text-sm font-medium mb-1.5">${title}</h5>
+      <p class="text-xs text-gray-500 mb-2">${description}</p>
+      <p class="text-xs text-gray-400 mb-2"><strong>Date:</strong> ${start}</p>
+    </div>
+  `;
+
+        // ✅ Ensure info.el is a real DOM element before passing it to tippy
+        if (info.el instanceof HTMLElement) {
+            tippy(info.el, {
+                content,
+                allowHTML: true,
+                interactive: true,
+                placement: "top",
+                trigger: "mouseenter",
+                theme: "custom",
+                animation: "shift-away",
+            });
+        }
+    };
 
     useEffect(() => {
         fetchEvents();
@@ -74,33 +113,6 @@ function Main(props) {
         editable: true,
         dayMaxEvents: true,
         events: events,
-        // events: [
-        //     {
-        //         title: "Vue Vixens Day",
-        //         start: "2021-01-05",
-        //         end: "2021-01-08",
-        //     },
-        //     {
-        //         title: "VueConfUS",
-        //         start: "2021-01-11",
-        //         end: "2021-01-15",
-        //     },
-        //     {
-        //         title: "VueJS Amsterdam",
-        //         start: "2021-01-17",
-        //         end: "2021-01-21",
-        //     },
-        //     {
-        //         title: "Vue Fes Japan 2019",
-        //         start: "2021-01-21",
-        //         end: "2021-01-24",
-        //     },
-        //     {
-        //         title: "Laracon 2021",
-        //         start: "2021-01-24",
-        //         end: "2021-01-27",
-        //     },
-        // ],
         drop: function (info) {
             if (dom("#checkbox-events").length && dom("#checkbox-events")[0].checked) {
                 dom(info.draggedEl).parent().remove();
@@ -110,20 +122,7 @@ function Main(props) {
                 }
             }
         },
-
-        // Pending Task....
-        dateClick: function (event) {
-            console.log("Calendar event:- ", event.dateStr);
-            const title = window.prompt("Enter event title");
-            setEvent((prev) => [
-                ...prev,
-                {
-                    title,
-                    start: event.dateStr,
-                    end: event.dateStr,
-                },
-            ]);
-        },
+        eventDidMount: handleEventDidMount,
     };
 
     return <FullCalendar options={options} />;

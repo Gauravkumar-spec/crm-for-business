@@ -8,11 +8,11 @@ import tippy from "tippy.js";
 
 const Schedules = () => {
     const [events, setEvents] = useState([
-        { title: "Team Sync", date: "2025-10-05", backgroundColor: "#3498db", allDay: false },
-        { title: "Design Review", date: "2025-10-09", backgroundColor: "#2ecc71", allDay: false },
-        { title: "Client Meeting", date: "2025-10-14", backgroundColor: "#e74c3c", allDay: false },
-        { title: "Sprint Planning", date: "2025-10-20", backgroundColor: "#f39c12", allDay: false },
-        { title: "Project Demo", date: "2025-10-25", backgroundColor: "#9b59b6", allDay: false },
+        { title: "Team Sync", date: "2025-11-05", backgroundColor: "#3498db", allDay: false },
+        { title: "Design Review", date: "2025-11-09", backgroundColor: "#2ecc71", allDay: false },
+        { title: "Client Meeting", date: "2025-11-14", backgroundColor: "#e74c3c", allDay: false },
+        { title: "Sprint Planning", date: "2025-11-20", backgroundColor: "#f39c12", allDay: false },
+        { title: "Project Demo", date: "2025-11-25", backgroundColor: "#9b59b6", allDay: false },
     ]);
 
     const renderEventContent = (eventInfo) => {

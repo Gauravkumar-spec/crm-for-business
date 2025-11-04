@@ -35,9 +35,9 @@ function Main() {
         setLoading(true);
         try {
             await client.api("/me/events").post({
-                subject: "meeting with ceo",
-                start: { dateTime: "2025-10-02T10:00:00", timeZone: "Asia/Kolkata" },
-                end: { dateTime: "2025-10-02T11:00:00", timeZone: "Asia/Kolkata" },
+                subject: "meeting with Amit",
+                start: { dateTime: "2025-11-07T10:00:00", timeZone: "Asia/Kolkata" },
+                end: { dateTime: "2025-11-10T11:00:00", timeZone: "Asia/Kolkata" },
             });
         } catch (error) {
             console.log("Error while creating event on calendar", error);
