@@ -96,6 +96,11 @@ const sideMenu = atom({
                 title: "Inbox",
             },
             {
+                icon: "Calendar",
+                pathname: "/dashboard/calendar",
+                title: "calendar",
+            },
+            {
                 icon: "Edit",
                 title: "Crud",
                 subMenu: [

@@ -26,19 +26,37 @@ function Main() {
         },
     };
 
+    const [isOpen, setIsOpen] = useState(false);
+
+    const onClose = () => {
+        setIsOpen(false);
+    };
+
     const { authProvider } = useSelector((state) => state.auth);
 
     const client = Client.initWithMiddleware({ authProvider });
     const [loading, setLoading] = useState(false);
 
-    async function createEvent() {
+    async function createEvent(eventData) {
+        const payload = {
+            subject: eventData.taskName,
+            body: {
+                contentType: "Text",
+                content: eventData.description || "No description provided",
+            },
+            start: {
+                dateTime: new Date(eventData.startDate).toISOString(), // always UTC
+                timeZone: "Asia/Kolkata",
+            },
+            end: {
+                dateTime: new Date(eventData.endDate).toISOString(),
+                timeZone: "Asia/Kolkata",
+            },
+        };
+
         setLoading(true);
         try {
-            await client.api("/me/events").post({
-                subject: "meeting with Amit",
-                start: { dateTime: "2025-11-07T10:00:00", timeZone: "Asia/Kolkata" },
-                end: { dateTime: "2025-11-10T11:00:00", timeZone: "Asia/Kolkata" },
-            });
+            await client.api("/me/events").post(payload);
         } catch (error) {
             console.log("Error while creating event on calendar", error);
         } finally {
@@ -55,7 +73,7 @@ function Main() {
             <div className="w-full">
                 <div className="w-full mb-5 flex items-center justify-end">
                     <button
-                        onClick={() => createEvent()}
+                        onClick={() => setIsOpen(true)}
                         type="button"
                         className="btn btn-primary cursor-pointer"
                     >
@@ -64,9 +82,16 @@ function Main() {
                     </button>
                 </div>
                 <div className="box p-5">
-                    <Calendar trigger={createEvent}/>
+                    <Calendar trigger={createEvent} />
                 </div>
             </div>
+
+            <TaskModal
+                isOpen={isOpen}
+                onClose={onClose}
+                onSubmit={createEvent}
+                isLoading={loading}
+            />
         </>
     );
 }
@@ -247,3 +272,156 @@ export default Main;
 //     </div> */}
 //     {/* END: Calendar Content */}
 // </div>; */}
+
+const TaskModal = ({ isOpen, onClose, onSubmit, isLoading }) => {
+    const [taskName, setTaskName] = useState("");
+    const [description, setDescription] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    if (!isOpen) {
+        return null;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!taskName) return; // Simple validation
+
+        onSubmit({ taskName, description, startDate, endDate });
+
+        // Reset form after submission and close modal
+        setTaskName("");
+        setDescription("");
+        setStartDate("");
+        setEndDate("");
+        onClose();
+    };
+
+    return (
+        // Modal Overlay: Fixed position, dark backdrop, centers content
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            onClick={onClose}
+        >
+            {/* Modal Container: Dark background, padding, rounded corners, max width */}
+            <div
+                className="bg-[#2B2C37] text-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md mx-4"
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+            >
+                {/* Modal Header */}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl font-bold">Create New Task</h2>
+                    <button
+                        className="text-[#828FA3] hover:text-white transition-colors"
+                        onClick={onClose}
+                    >
+                        {/* Simple 'X' icon or you can use a library like Heroicons/Lucide */}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit}>
+                    {/* Task Name Field */}
+                    <div className="mb-5">
+                        <label
+                            htmlFor="taskName"
+                            className="block text-xs font-bold mb-2 text-[#828FA3]"
+                        >
+                            Event Title
+                        </label>
+                        <input
+                            id="taskName"
+                            type="text"
+                            value={taskName}
+                            onChange={(e) => setTaskName(e.target.value)}
+                            placeholder="e.g., Design Landing Page"
+                            required
+                            className="w-full p-2.5 rounded border border-[#37394D] bg-[#37394D] text-white placeholder-[#828FA3] focus:outline-none focus:ring-1 focus:ring-[#635FC7]"
+                        />
+                    </div>
+
+                    {/* Description Field */}
+                    <div className="mb-5">
+                        <label
+                            htmlFor="description"
+                            className="block text-xs font-bold mb-2 text-[#828FA3]"
+                        >
+                            Description (Optional)
+                        </label>
+                        <textarea
+                            id="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="A brief detail about the task..."
+                            className="w-full p-2.5 rounded border border-[#37394D] bg-[#37394D] text-white placeholder-[#828FA3] focus:outline-none focus:ring-1 focus:ring-[#635FC7] min-h-[100px] resize-y"
+                        ></textarea>
+                    </div>
+
+                    {/*  Start Date Field */}
+                    <div className="mb-8">
+                        <label
+                            htmlFor="startDate"
+                            className="block text-xs font-bold mb-2 text-[#828FA3]"
+                        >
+                            Start Date
+                        </label>
+                        <input
+                            id="startDate"
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full p-2.5 rounded border border-[#37394D] bg-[#37394D] text-white placeholder-[#828FA3] focus:outline-none focus:ring-1 focus:ring-[#635FC7]"
+                        />
+                    </div>
+
+                    {/* End Date Field */}
+                    <div className="mb-8">
+                        <label
+                            htmlFor="endDate"
+                            className="block text-xs font-bold mb-2 text-[#828FA3]"
+                        >
+                            End Date
+                        </label>
+                        <input
+                            id="endDate"
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full p-2.5 rounded border border-[#37394D] bg-[#37394D] text-white placeholder-[#828FA3] focus:outline-none focus:ring-1 focus:ring-[#635FC7]"
+                        />
+                    </div>
+
+                    {/* Modal Footer: Buttons */}
+                    <div className="flex justify-between space-x-4">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="flex-1 py-2.5 px-4 rounded-full font-bold text-white bg-[#EA5555] hover:bg-[#FF9898] transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="flex-1 py-2.5 px-4 rounded-full font-bold text-white bg-[#635FC7] hover:bg-[#A8A4FF] transition-colors"
+                        >
+                            {isLoading ? "Creating..." : "Create Task"}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};

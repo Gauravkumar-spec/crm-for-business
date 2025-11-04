@@ -40,8 +40,8 @@ function Main(props) {
                 res?.value.map((v) => {
                     resultArr.push({
                         title: v.subject,
-                        start: formatDateToYYYYMMDD(new Date(v.start?.dateTime)),
-                        end: formatDateToYYYYMMDD(new Date(v.end?.dateTime)),
+                        start: v.start?.dateTime.split("T")[0],
+                        end: v.end?.dateTime.split("T")[0],
                         description: v?.bodyPreview || "No Description",
                     });
                 });
@@ -96,9 +96,9 @@ function Main(props) {
         fetchEvents();
     }, [props.trigger]);
 
-    if (loading) {
-        return <Loader message="Loading Events" />;
-    }
+    // if (loading) {
+    //     return <Loader message="Loading Events" />;
+    // }
 
     const options = {
         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
