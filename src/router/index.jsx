@@ -88,6 +88,8 @@ import ChartLeadFollowUp from "../test/ChartLeadFollowUp.jsx";
 import ActivityLog from "../views/dashboard-overview-1/components/ActivityLog.jsx"
 import ComposeMail from "../views/inbox/ComposeMail.jsx";
 import MailPreview from "../views/inbox/MailPreview.jsx";
+import { element } from "prop-types";
+import AgentPreview from "../pages/AgentPreview.jsx";
 
 function Router() {
     const routes = [
@@ -213,6 +215,10 @@ function Router() {
                 {
                     path: "edit-agent/:agentName",
                     element: <EditAgent />,
+                },
+                {
+                    path: "agent-preview/:agentName",
+                    element: <AgentPreview />
                 },
                 {
                     path: "point-of-sale",

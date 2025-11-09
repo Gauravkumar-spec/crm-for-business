@@ -102,7 +102,7 @@ function AgentList() {
                         <span>{error}</span>
                     </div>
                     <button
-                        onClick={async() => {
+                        onClick={async () => {
                             console.log("🔄 Retrying fetch...");
                             setError(null);
                             await fetchAgents();
@@ -151,8 +151,11 @@ function AgentList() {
 
                             return (
                                 <div
+                                    onClick={() =>
+                                        navigate(`/dashboard/agent-preview/${agent.name}`)
+                                    }
                                     key={agent?.agent_id}
-                                    className="relative group"
+                                    className="relative group cursor-pointer"
                                     onMouseEnter={() => setHoveredCard(index)}
                                     onMouseLeave={() => setHoveredCard(null)}
                                 >
