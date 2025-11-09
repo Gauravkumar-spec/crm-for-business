@@ -78,12 +78,13 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Login from "../pages/Login";
 
 // temp imports
-import LeadConverion from "../test/LeadConverion.jsx";
-import AgentPerformance from "../test/AgentPerformance.jsx";
+import LeadConverion from "../views/dashboard-overview-1/graphs/LeadConverion.jsx";
+import AgentPerformance from "../views/dashboard-overview-1/graphs/AgentPerformance.jsx";
 import LeadSource from "../views/dashboard-overview-1/components/LeadSource.jsx";
 import RevenueTrend from "../views/dashboard-overview-1/components/RevenueTrend.jsx";
 import LeadCreated from "../views/dashboard-overview-1/components/LeadCreated.jsx";
-import ChartLeadFollowUp from "../test/ChartLeadFollowUp.jsx";
+import ChartLeadFollowUp from "../views/dashboard-overview-1/graphs/ChartLeadFollowUp.jsx";
+import Graphs from "../views/dashboard-overview-1/components/Graphs.jsx";
 
 import ActivityLog from "../views/dashboard-overview-1/components/ActivityLog.jsx"
 import ComposeMail from "../views/inbox/ComposeMail.jsx";
@@ -105,10 +106,10 @@ function Router() {
             ),
             children: [
                 { index: true, element: <DashboardOverview1 /> },
-                // {
-                //     path: "dashboard-overview-2",
-                //     element: <DashboardOverview2 />,
-                // },
+                {
+                    path: "graphs",
+                    element: <Graphs />,
+                },
                 // {
                 //     path: "dashboard-overview-3",
                 //     element: <DashboardOverview3 />,

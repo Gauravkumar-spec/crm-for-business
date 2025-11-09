@@ -8,12 +8,12 @@ const sideMenu = atom({
                 icon: "Home",
                 title: "Dashboard",
                 pathname: "/dashboard",
-                // subMenu: [
-                //     {
-                //         icon: "",
-                //         pathname: "/dashboard",
-                //         title: "Overview 1",
-                //     },
+                 subMenu: [
+                    {
+                        icon: "Report",
+                        pathname: "/dashboard/graphs",
+                        title: "Reports",
+                    },
                 //     {
                 //         icon: "",
                 //         pathname: "/dashboard/dashboard-overview-2",
@@ -29,7 +29,7 @@ const sideMenu = atom({
                 //         pathname: "/dashboard/dashboard-overview-4",
                 //         title: "Overview 4",
                 //     },
-                // ],
+                ],
             },
             {
                 icon: "CreditCard",

@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { useMemo, useState, useEffect } from "react";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
-import { dashboardApi } from "../api/dashboardApi.js";
+import { dashboardApi } from "../../../api/dashboardApi.js";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -112,7 +112,7 @@ function Main(props) {
             <Chart
             type="bar"
             width={props.width}
-            height={400}
+            height={props.height}
             data={data}
             options={options}
             className={props.className}

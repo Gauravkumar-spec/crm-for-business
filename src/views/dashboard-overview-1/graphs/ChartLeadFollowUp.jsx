@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { useEffect, useMemo, useState } from "react";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
-import { dashboardApi } from "../api/dashboardApi.js";
+import { dashboardApi } from "../../../api/dashboardApi.js";
 import {
     Lucide,
     Dropdown,
@@ -232,7 +232,7 @@ function Main(props) {
             <Chart
                 type="bar"
                 width={props.width}
-                height={400}
+                height={props.height}
                 data={data}
                 options={options}
                 className={props.className}
