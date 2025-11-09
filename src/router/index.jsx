@@ -80,15 +80,14 @@ import Login from "../pages/Login";
 // temp imports
 import LeadConverion from "../test/LeadConverion.jsx";
 import AgentPerformance from "../test/AgentPerformance.jsx";
-import LeadSource from "../test/LeadSource.jsx";
-import RevenueTrend from "../test/RevenueTrend.jsx";
-import LeadCreated from "../test/LeadCreated.jsx";
+import LeadSource from "../views/dashboard-overview-1/components/LeadSource.jsx";
+import RevenueTrend from "../views/dashboard-overview-1/components/RevenueTrend.jsx";
+import LeadCreated from "../views/dashboard-overview-1/components/LeadCreated.jsx";
 import ChartLeadFollowUp from "../test/ChartLeadFollowUp.jsx";
 
 import ActivityLog from "../views/dashboard-overview-1/components/ActivityLog.jsx"
 import ComposeMail from "../views/inbox/ComposeMail.jsx";
 import MailPreview from "../views/inbox/MailPreview.jsx";
-import { element } from "prop-types";
 import AgentPreview from "../pages/AgentPreview.jsx";
 
 function Router() {
@@ -144,7 +143,7 @@ function Router() {
                     element: <RevenueTrend />,
                 },
                 {
-                    path: "graph/leadCreated",
+                    path: "graph/leadCreated", // bar graph
                     element: <LeadCreated />,
                 },
                 {

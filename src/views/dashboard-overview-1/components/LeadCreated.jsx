@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { useEffect, useMemo, useState } from "react";
-import { dashboardApi } from "../api/dashboardApi.js";
+import { dashboardApi } from "../../../api/dashboardApi.js";
 import { startOfISOWeek, endOfISOWeek, parseISO, format } from "date-fns";
 
 import {
@@ -182,7 +182,7 @@ function Main(props) {
     }, [type]);
 
     return (
-        <div className="intro-y box mt-5 p-10">
+        <div className="intro-y w-full box mt-5 p-10">
             <div className="form-check form-switch flex  justify-end gap-3 w-full sm:w-auto sm:ml-auto mt-3 sm:mt-0">
                 <Dropdown className="md:ml-auto mt-5 md:mt-0">
                     <DropdownToggle className="btn btn-outline-secondary font-normal">
@@ -213,8 +213,8 @@ function Main(props) {
             </div>
             <Chart
                 type="bar"
-                width={props.width}
-                height={400}
+                width="100%"
+                height={props.height}
                 data={data}
                 options={options}
                 className={props.className}

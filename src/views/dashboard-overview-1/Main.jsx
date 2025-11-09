@@ -26,6 +26,10 @@ import TotalProperty from "./components/TotalProperty.jsx";
 import TopLeads from "./components/TopLeads.jsx";
 import TopAgent from "./components/TopAgent.jsx";
 import Schedules from "./components/Schedules.jsx";
+import RevenueTrend from "./components/RevenueTrend.jsx";
+import LeadSource from "./components/LeadSource.jsx";
+import LeadCreated from "./components/LeadCreated.jsx";
+import { useSelector } from "react-redux";
 
 function Main() {
     const [salesReportFilter, setSalesReportFilter] = useState();
@@ -36,6 +40,39 @@ function Main() {
     const nextImportantNotes = () => {
         importantNotesRef.current.tns.goTo("next");
     };
+
+    const month = {
+        0: "January",
+        1: "February",
+        2: "March",
+        3: "April",
+        4: "May",
+        5: "June",
+        6: "July",
+        7: "August",
+        8: "September",
+        9: "October",
+        10: "November",
+        11: "December",
+    };
+
+    const getMonth = (date) => {
+        return new Date(date).getMonth();
+    };
+
+    function normalizeRupees(amount) {
+        if (!amount) return;
+        const numeric = amount.toString().replace(/[^0-9]/g, "");
+
+        const formatted = Number(numeric).toLocaleString("en-IN");
+
+        return `Rs.${formatted}`;
+    }
+
+    // here i assume there are only two data come in revenue report
+    // last month, current month
+    const revenueData = useSelector((state) => state.revenueGraph.revenueData);
+    console.log("Data from store of revenue", revenueData);
 
     const { isAuthenticated, loading, session } = useAuth();
 
@@ -157,9 +194,12 @@ function Main() {
                     {/* END: General Report */}
                     {/* BEGIN: Sales Report */}
                     <div className="col-span-12 lg:col-span-6 mt-8">
-                        <div className="intro-y block sm:flex items-center h-10">
-                            <h2 className="text-lg font-medium truncate mr-5">Sales Report</h2>
-                            <div className="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
+                        {/* Header Section */}
+                        <div className="intro-y flex flex-col sm:flex-row sm:items-center h-10">
+                            <h2 className="text-lg font-semibold truncate mr-5">Sales Report</h2>
+
+                            {/* Date Picker */}
+                            {/* <div className="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
                                 <Lucide
                                     icon="Calendar"
                                     className="w-4 h-4 z-10 absolute my-auto inset-y-0 ml-3 left-0"
@@ -182,26 +222,35 @@ function Main() {
                                     }}
                                     className="form-control sm:w-56 box pl-10"
                                 />
-                            </div>
+                            </div> */}
                         </div>
-                        <div className="intro-y box p-5 mt-12 sm:mt-5">
-                            <div className="flex flex-col md:flex-row md:items-center">
-                                <div className="flex">
+
+                        {/* Sales Summary and Filter */}
+                        <div className="intro-y box p-6 mt-8">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                                {/* Monthly Comparison */}
+                                <div className="flex items-center">
                                     <div>
                                         <div className="text-primary dark:text-slate-300 text-lg xl:text-xl font-medium">
-                                            $15,000
+                                            {normalizeRupees(revenueData[1]?.revenue) || "Loading"}
                                         </div>
-                                        <div className="mt-0.5 text-slate-500">This Month</div>
+                                        <div className="mt-0.5 font-semibold text-slate-500">
+                                            {month[getMonth(revenueData[1]?.date)] || "Loading"}
+                                        </div>
                                     </div>
-                                    <div className="w-px h-12 border border-r border-dashed border-slate-200 dark:border-darkmode-300 mx-4 xl:mx-5"></div>
+                                    <div className="w-px h-12 border border-dashed border-slate-200 dark:border-darkmode-300 mx-5"></div>
                                     <div>
                                         <div className="text-slate-500 text-lg xl:text-xl font-medium">
-                                            $10,000
+                                            {normalizeRupees(revenueData[0]?.revenue) || "Loading"}
                                         </div>
-                                        <div className="mt-0.5 text-slate-500">Last Month</div>
+                                        <div className="mt-0.5 font-semibold text-slate-500">
+                                            {month[getMonth(revenueData[0]?.date)] || "Loading"}
+                                        </div>
                                     </div>
                                 </div>
-                                <Dropdown className="md:ml-auto mt-5 md:mt-0">
+
+                                {/* Category Filter */}
+                                {/* <Dropdown className="mt-5 md:mt-0">
                                     <DropdownToggle className="btn btn-outline-secondary font-normal">
                                         Filter by Category
                                         <Lucide icon="ChevronDown" className="w-4 h-4 ml-2" />
@@ -215,16 +264,19 @@ function Main() {
                                             <DropdownItem>Sport</DropdownItem>
                                         </DropdownContent>
                                     </DropdownMenu>
-                                </Dropdown>
+                                </Dropdown> */}
                             </div>
-                            <div className="report-chart">
-                                <ReportLineChart height={275} className="mt-6 -mb-6" />
+
+                            {/* Chart Section */}
+                            <div className="mt-6">
+                                <RevenueTrend className="h-[250px]" />
                             </div>
                         </div>
                     </div>
                     {/* END: Sales Report */}
+
                     {/* BEGIN: Weekly Top Seller */}
-                    <div className="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
+                    {/* <div className="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
                         <div className="intro-y flex items-center h-10">
                             <h2 className="text-lg font-medium truncate mr-5">Weekly Top Seller</h2>
                             <a href="" className="ml-auto text-primary truncate">
@@ -253,10 +305,11 @@ function Main() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     {/* END: Weekly Top Seller */}
+
                     {/* BEGIN: Sales Report */}
-                    <div className="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
+                    {/* <div className="col-span-12 sm:col-span-6 lg:col-span-3 mt-8">
                         <div className="intro-y flex items-center h-10">
                             <h2 className="text-lg font-medium truncate mr-5">Sales Report</h2>
                             <a href="" className="ml-auto text-primary truncate">
@@ -285,12 +338,38 @@ function Main() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     {/* END: Sales Report */}
+
+                    {/* BEGIN: LeadSource Report */}
+                    <div className="col-span-12 lg:col-span-6 mt-8">
+                        {/* Header */}
+                        <div className="intro-y flex items-center h-10">
+                            <h2 className="text-lg font-semibold truncate mr-5">
+                                Lead Source Report
+                            </h2>
+                        </div>
+
+                        {/* Chart Box */}
+                        <div className="intro-y box p-6 mt-8">
+                            {/* Chart Container */}
+                            <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+                                {/* === Add your Pie Chart component here === */}
+                                <div className="flex justify-center items-center w-full lg:w-1/2">
+                                    {/* Example placeholder — replace with your chart */}
+                                    <div className="flex justify-center items-center w-full lg:w-1/2">
+                                        <LeadSource height={322} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* END: LeadSource Report*/}
+
                     {/* BEGIN: Official Store */}
                     <div className="col-span-12 xl:col-span-8 mt-6">
                         <div className="intro-y block sm:flex items-center h-10">
-                            <h2 className="text-lg font-medium truncate mr-5">Official Store</h2>
+                            <h2 className="text-lg font-semibold truncate mr-5">Official Store</h2>
                             <div className="sm:ml-auto mt-3 sm:mt-0 relative text-slate-500">
                                 <Lucide
                                     icon="MapPin"
@@ -312,6 +391,7 @@ function Main() {
                         </div>
                     </div>
                     {/* END: Official Store */}
+
                     {/* BEGIN: Weekly Best Sellers */}
                     <TopAgent />
                     {/* END: Weekly Best Sellers */}
@@ -388,6 +468,18 @@ function Main() {
                     {/* BEGIN: Weekly Top Leads */}
                     <TopLeads />
                     {/* END: Weekly Top Leads */}
+
+                    {/* BEGIN: Lead Created */}
+                    <div className="col-span-12">
+                        <div className="intro-y box px-4 pb-4 h-full flex flex-col justify-between">
+                            <div className="flex items-center justify-between mt-3">
+                                <h2 className="text-lg font-semibold">Lead Created</h2>
+                            </div>
+
+                            <LeadCreated height={200} />
+                        </div>
+                    </div>
+                    {/* END: Lead Created */}
                 </div>
             </div>
             <div className="col-span-12 2xl:col-span-3">

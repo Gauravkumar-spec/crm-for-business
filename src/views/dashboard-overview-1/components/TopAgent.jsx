@@ -36,7 +36,7 @@ const TopAgent = () => {
     return (
         <div className="col-span-12 xl:col-span-4 mt-6">
             <div className="intro-y flex items-center h-10">
-                <h2 className="text-lg font-medium truncate mr-5">Top Agents</h2>
+                <h2 className="text-lg font-semibold truncate mr-5">Top Agents</h2>
             </div>
             {error ? (
                 <h4 className="text-slate-400 text-lg font-medium text-center">404 Not Found</h4>

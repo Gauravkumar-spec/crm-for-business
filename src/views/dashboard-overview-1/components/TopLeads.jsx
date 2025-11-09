@@ -59,7 +59,7 @@ const TopLeads = () => {
     return (
         <div className="col-span-12 mt-6">
             <div className="intro-y block sm:flex items-center h-10">
-                <h2 className="text-lg font-medium truncate mr-5">Top Leads</h2>
+                <h2 className="text-lg font-semibold truncate mr-5">Top Leads</h2>
                 <div className="flex items-center sm:ml-auto mt-3 sm:mt-0">
                     <button className="btn box flex items-center text-slate-600 dark:text-slate-300">
                         <Lucide icon="FileText" className="hidden sm:block w-4 h-4 mr-2" />

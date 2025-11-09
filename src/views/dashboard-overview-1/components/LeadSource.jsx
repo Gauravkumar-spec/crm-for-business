@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { useEffect, useMemo, useState } from "react";
-import { dashboardApi } from "../api/dashboardApi.js";
+import { dashboardApi } from "../../../api/dashboardApi.js";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -80,7 +80,7 @@ function Main(props) {
         <Chart
             type="pie"
             width={props.width}
-            height={400}
+            height={props.height}
             data={data}
             options={options}
             className={props.className}

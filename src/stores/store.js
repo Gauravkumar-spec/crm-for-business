@@ -9,6 +9,7 @@ import agentReducer from "../stores/slices/agentSlice.js";
 import leadReducer from "../stores/slices/leadSlice.js";
 import propertyReducer from "../stores/slices/propertySlice.js";
 import authReducer from "./slices/appSlice.js"
+import revenueReducer from "./slices/revenue_graph_das.js"
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         leads: leadReducer,
         property: propertyReducer,
         auth: authReducer,
+        revenueGraph: revenueReducer,
 
         [propertyApi.reducerPath]: propertyApi.reducer,
         [agentApi.reducerPath]: agentApi.reducer,

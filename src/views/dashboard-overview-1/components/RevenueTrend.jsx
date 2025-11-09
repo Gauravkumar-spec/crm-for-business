@@ -5,11 +5,15 @@ import { useRecoilValue } from "recoil";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { useEffect, useMemo, useState } from "react";
-import { dashboardApi } from "../api/dashboardApi.js";
+import { dashboardApi } from "../../../api/dashboardApi.js";
+import { useDispatch } from "react-redux";
+import { setRevenueData } from "../../../stores/slices/revenue_graph_das.js";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
     const colorScheme = useRecoilValue(colorSchemeStore);
+
+    const dispatch = useDispatch()
 
     const [revenueTrendData, setRevenueTrendData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -47,6 +51,7 @@ function Main(props) {
                 const data = JSON.parse(fixedArr);
 
                 setRevenueTrendData(data);
+                dispatch(setRevenueData(data));
             }
         } catch (error) {
             setError(error);
@@ -121,15 +126,8 @@ function Main(props) {
     });
 
     return (
-        <div className="intro-y box mt-5 p-10">
-            <Chart
-                type="line"
-                width={props.width}
-                height={400}
-                data={data}
-                options={options}
-                className={props.className}
-            />
+        <div className={`intro-y box p-5 flex justify-center items-center ${props.className}`}>
+            <Chart type="line" width="100%" height={220} data={data} options={options} />
         </div>
     );
 }
