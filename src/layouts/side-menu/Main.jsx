@@ -6,7 +6,7 @@ import { sideMenu as useSideMenuStore } from "@/stores/side-menu";
 import { useRecoilValue } from "recoil";
 import { linkTo, nestedMenu, enter, leave } from "./index";
 import { Lucide } from "@/base-components";
-// import logoUrl from "@/assets/images/logo.svg";
+import logo from "../../assets/images/logo_crm.png";
 
 import classnames from "classnames";
 import TopBar from "@/components/top-bar/Main";
@@ -35,13 +35,12 @@ function Main() {
             <div className="flex mt-[4.7rem] md:mt-0 ">
                 {/* BEGIN: Side Menu */}
                 <nav className="side-nav">
-                    <Link to="/dashboard" className="intro-x flex items-center pl-5 pt-4">
-                        {/* <img
-              alt="Midone Tailwind HTML Admin Template"
-              className="w-6"
-              src={logoUrl}
-            /> */}
-                        <span className="hidden xl:block text-white text-lg ml-3">Omnia</span>
+                    <Link to="/dashboard" className="intro-x flex items-center justify-center pl-5 pt-4">
+                        <img
+                            alt="Terrax Crm Template"
+                            className="w-32 h-auto"
+                            src={logo}
+                        />
                     </Link>
                     <div className="side-nav__devider my-6"></div>
                     <ul>
