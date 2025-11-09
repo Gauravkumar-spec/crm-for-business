@@ -2,10 +2,24 @@ import { RefreshCcw } from "lucide-react"; // if using Lucide icons like in the 
 import AgentPerformance from "../graphs/AgentPerformance.jsx";
 import ChartLeadFollowUp from "../graphs/ChartLeadFollowUp.jsx";
 import LeadConverion from "../graphs/LeadConverion.jsx";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Graphs = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="col-span-12 2xl:col-span-9">
+            <div className="flex flex-col items-start gap-2 mt-5">
+                <button
+                    onClick={() => navigate(`/dashboard`)}
+                    className="flex items-center text-gray-600 hover:text-[#A00500] transition-colors"
+                >
+                    <FaArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Dashboard
+                </button>
+               
+            </div>
             <div className="grid grid-cols-12 gap-6">
                 {/* ====== GRAPH 1: AgentPerformance ====== */}
                 <div className="col-span-12 mt-8">

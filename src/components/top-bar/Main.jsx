@@ -14,7 +14,8 @@ import * as $_ from "lodash";
 import classnames from "classnames";
 import { useAuth } from "../../context/AuthContext";
 import userProfilePic from "../../assets/images/profile-5.jpg";
-import { notificationApi } from "../../api/notificationApi.js";
+
+import NotificationList from "./Notification";
 
 function Main(props) {
     const [searchDropdown, setSearchDropdown] = useState(false);
@@ -26,35 +27,6 @@ function Main(props) {
     };
 
     const { isAuthenticated, loading, session, handleLogout } = useAuth();
-
-    const [notifications, setNotifications] = useState(null);
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const fetchNotifications = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
-
-            const payload = {
-                agent_email: "agent1@example.com",
-                client_id: 1,
-                limit: 5,
-                sort_by: "notification_id",
-                sort_order: "ASC",
-            };
-
-            const response = await notificationApi.getAgentNotification(payload);
-
-            if (response) {
-                console.log(response);
-            }
-        } catch (error) {
-            setError(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <>
@@ -159,53 +131,12 @@ function Main(props) {
                         tag="div"
                         role="button"
                         className="notification notification--bullet cursor-pointer"
-                        onClick={fetchNotifications}
                     >
                         <Lucide icon="Bell" className="notification__icon dark:text-slate-500" />
                     </DropdownToggle>
                     <DropdownMenu className="notification-content pt-2">
-                        <DropdownContent tag="div" className="notification-content__box">
-                            <div className="notification-content__title">Notifications</div>
-                            {isLoading ? (
-                                <h4>Loading</h4>
-                            ) : (
-                                <>
-                                    {$_.take($f(), 5).map((faker, fakerKey) => (
-                                        <div
-                                            key={fakerKey}
-                                            className={classnames({
-                                                "cursor-pointer relative flex items-center": true,
-                                                "mt-5": fakerKey,
-                                            })}
-                                        >
-                                            <div className="w-12 h-12 flex-none image-fit mr-1">
-                                                <img
-                                                    alt="Midone Tailwind HTML Admin Template"
-                                                    className="rounded-full"
-                                                    src={faker.photos[0]}
-                                                />
-                                                <div className="w-3 h-3 bg-success absolute right-0 bottom-0 rounded-full border-2 border-white dark:border-darkmode-600"></div>
-                                            </div>
-                                            <div className="ml-2 overflow-hidden">
-                                                <div className="flex items-center">
-                                                    <a
-                                                        href=""
-                                                        className="font-medium truncate mr-5"
-                                                    >
-                                                        {faker.users[0].name}
-                                                    </a>
-                                                    <div className="text-xs text-slate-400 ml-auto whitespace-nowrap">
-                                                        {faker.times[0]}
-                                                    </div>
-                                                </div>
-                                                <div className="w-full truncate text-slate-500 mt-0.5">
-                                                    {faker.news[0].shortContent}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </>
-                            )}
+                        <DropdownContent tag="div">
+                            <NotificationList />
                         </DropdownContent>
                     </DropdownMenu>
                 </Dropdown>

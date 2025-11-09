@@ -12,6 +12,7 @@ import dom from "@left4code/tw-starter/dist/js/dom";
 import { Client } from "@microsoft/microsoft-graph-client";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function Main() {
     const dragableOptions = {
@@ -33,6 +34,9 @@ function Main() {
     };
 
     const { authProvider } = useSelector((state) => state.auth);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!authProvider);
+
+    const navigate = useNavigate()
 
     const client = Client.initWithMiddleware({ authProvider });
     const [loading, setLoading] = useState(false);
@@ -66,7 +70,17 @@ function Main() {
 
     return (
         <>
-            <div className="intro-y flex flex-col sm:flex-row items-center mt-8">
+            {/* ⚠️ Warning Banner */}
+            {!isLoggedIn && (
+                <div className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-yellow-100 border border-yellow-400 text-yellow-800">
+                    <Lucide icon="AlertTriangle" className="w-5 h-5 text-yellow-600" />
+                    <span className="font-medium">
+                        You are not signed in. Please sign in with your Outlook account.
+                    </span>
+                    <button className="hover:bg-yellow-500 font-semibold hover:cursor-pointer px-3 py-1 bg-yellow-300 rounded-md" onClick={()=> navigate(`/dashboard/inbox`)}>Sign In</button>
+                </div>
+            )}
+            <div className="intro-y flex flex-col sm:flex-row items-center mt-2">
                 <h2 className="text-lg font-medium mr-auto">Calendar</h2>
             </div>
 

@@ -6,6 +6,8 @@ import { useMemo, useState, useEffect } from "react";
 import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { dashboardApi } from "../../../api/dashboardApi.js";
+import Loader from "../../../components/loading-ui/Main.jsx";
+import Error from "../../../components/error-ui/Main.jsx";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -107,16 +109,24 @@ function Main(props) {
         };
     });
 
+    if (loading) {
+        return <Loader message="Agent Performance Report Loading..." />;
+    }
+
+    if (error) {
+        return <Error handlerFunc={fetchAgentPerformance} />;
+    }
+
     return (
         <div className="intro-y box mt-5 p-10">
             <Chart
-            type="bar"
-            width={props.width}
-            height={props.height}
-            data={data}
-            options={options}
-            className={props.className}
-        />
+                type="bar"
+                width={props.width}
+                height={props.height}
+                data={data}
+                options={options}
+                className={props.className}
+            />
         </div>
     );
 }

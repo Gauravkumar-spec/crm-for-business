@@ -9,4 +9,12 @@ export const notificationApi = {
             throw error?.response?.data || error;
         }
     },
+    getAgentNotificationOnRead: async (data) => {
+        try {
+            const response = await axiosInstance.post("agentNotificationread", data);
+            return response.data;
+        } catch (error) {
+            throw error?.response?.data || error;
+        }
+    },
 };
