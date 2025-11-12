@@ -14,6 +14,8 @@ import {
     DropdownContent,
     DropdownItem,
 } from "@/base-components";
+import Loader from "../../../components/loading-ui/Main.jsx";
+import Error from "../../../components/error-ui/Main.jsx";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -182,6 +184,15 @@ function Main(props) {
     useEffect(() => {
         fetchLeadFollowUp();
     }, []);
+
+
+     if (loading) {
+        return <Loader message="Lead Conversion Report Loading..." />;
+    }
+
+    if (error) {
+        return <Error handlerFunc={fetchLeadFollowUp} />;
+    }
 
     return (
         <div className="intro-y box mt-5 p-10">

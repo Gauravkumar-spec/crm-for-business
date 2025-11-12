@@ -24,6 +24,8 @@ import image1 from "../../assets/images/p-1.jpg";
 import image2 from "../../assets/images/p-2.jpg";
 import image3 from "../../assets/images/p-3.jpg";
 import { setProperty } from "../../stores/slices/propertySlice.js";
+import LoaderUI from "../../components/loading-ui/Main.jsx";
+import ErrorUI from "../../components/error-ui/Main.jsx";
 
 function Main() {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
@@ -117,50 +119,18 @@ function Main() {
             }
         } finally {
             setIsDeleting(false);
-            setDeleteConfirmationModal(false)
+            setDeleteConfirmationModal(false);
         }
     };
 
     if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full p-5">
-                <svg
-                    className="w-16 h-16 text-red-500 mb-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                </svg>
-                <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                    Something went wrong
-                </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    Please try again later.
-                </p>
-                <button
-                    onClick={async() => await fetchPage()}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                    Try Again
-                </button>
-            </div>
-        );
+        return <ErrorUI handlerFunc={fetchPage} />;
     }
 
     return (
         <div>
             {loading ? (
-                <div className="w-full h-screen flex items-center justify-center flex-col gap-3">
-                    <p className="text-2xl font-semibold text-[#312E81]">Please Wait</p>
-                    <p className="font-medium text-lg text-gray-400">Loading...</p>
-                </div>
+                <LoaderUI message="Loading Property" />
             ) : (
                 <>
                     <h2 className="intro-y text-lg font-medium mt-10">Product List</h2>

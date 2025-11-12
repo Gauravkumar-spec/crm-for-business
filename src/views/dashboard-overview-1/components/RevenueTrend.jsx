@@ -8,12 +8,13 @@ import { useEffect, useMemo, useState } from "react";
 import { dashboardApi } from "../../../api/dashboardApi.js";
 import { useDispatch } from "react-redux";
 import { setRevenueData } from "../../../stores/slices/revenue_graph_das.js";
+import { PulseLoader } from "react-spinners";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
     const colorScheme = useRecoilValue(colorSchemeStore);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const [revenueTrendData, setRevenueTrendData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -127,7 +128,23 @@ function Main(props) {
 
     return (
         <div className={`intro-y box p-5 flex justify-center items-center ${props.className}`}>
-            <Chart type="line" width="100%" height={220} data={data} options={options} />
+            {error ? (
+                <p className="text-sm text-slate-500 mt-1">404 Not Found</p>
+            ) : (
+                <>
+                    {!error && loading ? (
+                        <PulseLoader color="#270038" size={7} />
+                    ) : (
+                        <Chart
+                            type="line"
+                            width="100%"
+                            height={220}
+                            data={data}
+                            options={options}
+                        />
+                    )}
+                </>
+            )}
         </div>
     );
 }

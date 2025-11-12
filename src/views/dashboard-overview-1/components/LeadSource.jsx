@@ -6,6 +6,7 @@ import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { useEffect, useMemo, useState } from "react";
 import { dashboardApi } from "../../../api/dashboardApi.js";
+import { PulseLoader } from "react-spinners";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -77,14 +78,26 @@ function Main(props) {
     });
 
     return (
-        <Chart
-            type="pie"
-            width={props.width}
-            height={props.height}
-            data={data}
-            options={options}
-            className={props.className}
-        />
+        <>
+            {error ? (
+                <p className="text-sm text-slate-500 mt-1">404 Not Found</p>
+            ) : (
+                <>
+                    {!error && loading ? (
+                        <PulseLoader color="#270038" size={7} />
+                    ) : (
+                        <Chart
+                            type="pie"
+                            width={props.width}
+                            height={props.height}
+                            data={data}
+                            options={options}
+                            className={props.className}
+                        />
+                    )}
+                </>
+            )}
+        </>
     );
 }
 

@@ -14,6 +14,8 @@ import leadImage from "../../assets/images/profile-12.jpg";
 
 import { faker as $f } from "../../pages/PropertyList";
 import { useNavigate } from "react-router-dom";
+import ErrorUI from "../../components/error-ui/Main.jsx";
+import LoaderUI from "../../components/loading-ui/Main.jsx";
 
 function Main() {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
@@ -76,56 +78,11 @@ function Main() {
 
     if (error) {
         console.warn("⚠️ Error UI shown:", error);
-        return (
-            <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-                <div className="bg-gradient-to-br from-red-900/40 to-red-800/30 border border-red-800/50 text-red-300 px-6 py-4 rounded-xl max-w-md mx-auto backdrop-blur-sm">
-                    <div className="flex items-center space-x-2">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                            />
-                        </svg>
-                        <span>{error}</span>
-                    </div>
-                    <button
-                        onClick={async () => {
-                            console.log("🔄 Retrying fetch...");
-                            setError(null);
-                            await fetchLead();
-                        }}
-                        className="mt-3 text-cyan-400 hover:text-cyan-300 text-sm"
-                    >
-                        Try Again
-                    </button>
-                </div>
-            </div>
-        );
+        return <ErrorUI handlerFunc={fetchLead} />;
     }
 
     if (loading) {
-        console.log("⏳ Loading agents...");
-        return (
-            <div className="min-h-screen bg-zinc-200 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="relative inline-flex">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 animate-spin"></div>
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-zinc-900 rounded-full"></div>
-                    </div>
-                    <p className="mt-4 text-lg text-blue-500 font-semibold tracking-wider">
-                        LOADING LEADS
-                    </p>
-                </div>
-            </div>
-        );
+        return <LoaderUI message="Loading Leads" />;
     }
 
     return (

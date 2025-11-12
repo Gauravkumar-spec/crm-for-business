@@ -6,6 +6,8 @@ import { colorScheme as colorSchemeStore } from "@/stores/color-scheme";
 import { darkMode as darkModeStore } from "@/stores/dark-mode";
 import { useEffect, useMemo, useState } from "react";
 import { dashboardApi } from "../../../api/dashboardApi.js";
+import Loader from "../../../components/loading-ui/Main.jsx";
+import Error from "../../../components/error-ui/Main.jsx";
 
 function Main(props) {
     const darkMode = useRecoilValue(darkModeStore);
@@ -75,6 +77,14 @@ function Main(props) {
             },
         };
     });
+
+     if (loading) {
+        return <Loader message="Lead Conversion Report Loading..." />;
+    }
+
+    if (error) {
+        return <Error handlerFunc={fetchLeadConversion} />;
+    }
 
     return (
         <Chart
