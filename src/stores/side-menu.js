@@ -7,8 +7,13 @@ const sideMenu = atom({
             {
                 icon: "Home",
                 title: "Dashboard",
-                pathname: "/dashboard",
+                
                  subMenu: [
+                    {
+                        icon: "Dashboard",
+                        pathname: "/dashboard",
+                        title: "Dashboard",
+                    },
                     {
                         icon: "Report",
                         pathname: "/dashboard/graphs",

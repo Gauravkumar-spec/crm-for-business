@@ -30,6 +30,8 @@ import RevenueTrend from "./components/RevenueTrend.jsx";
 import LeadSource from "./components/LeadSource.jsx";
 import LeadCreated from "./components/LeadCreated.jsx";
 import { useSelector } from "react-redux";
+import tempLogo from "../../assets/images/image.png"
+import tempPlaceHolder from "../../assets/images/placeholders/200x200.jpg"
 
 function Main() {
     const [salesReportFilter, setSalesReportFilter] = useState();
@@ -497,7 +499,7 @@ function Main() {
                                             <div className="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
                                                 <img
                                                     alt="Midone Tailwind HTML Admin Template"
-                                                    src={faker.photos[0]}
+                                                    src={tempLogo}
                                                 />
                                             </div>
                                             <div className="ml-4 mr-auto">
@@ -544,7 +546,7 @@ function Main() {
                                         <div className="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
                                             <img
                                                 alt="Midone Tailwind HTML Admin Template"
-                                                src={$f()[9].photos[0]}
+                                                src={tempLogo}
                                             />
                                         </div>
                                     </div>
@@ -567,7 +569,7 @@ function Main() {
                                         <div className="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
                                             <img
                                                 alt="Midone Tailwind HTML Admin Template"
-                                                src={$f()[8].photos[0]}
+                                                src={tempLogo}
                                             />
                                         </div>
                                     </div>
@@ -591,7 +593,7 @@ function Main() {
                                                     <img
                                                         alt="Midone Tailwind HTML Admin Template"
                                                         className="rounded-md border border-white"
-                                                        src={$f()[8].images[0]}
+                                                        src={tempPlaceHolder}
                                                     />
                                                 </Tippy>
                                                 <Tippy
@@ -602,7 +604,7 @@ function Main() {
                                                     <img
                                                         alt="Midone Tailwind HTML Admin Template"
                                                         className="rounded-md border border-white"
-                                                        src={$f()[8].images[1]}
+                                                        src={tempPlaceHolder}
                                                     />
                                                 </Tippy>
                                                 <Tippy
@@ -613,7 +615,7 @@ function Main() {
                                                     <img
                                                         alt="Midone Tailwind HTML Admin Template"
                                                         className="rounded-md border border-white"
-                                                        src={$f()[8].images[2]}
+                                                        src={tempPlaceHolder}
                                                     />
                                                 </Tippy>
                                             </div>
@@ -628,7 +630,7 @@ function Main() {
                                         <div className="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
                                             <img
                                                 alt="Midone Tailwind HTML Admin Template"
-                                                src={$f()[7].photos[0]}
+                                                src={tempLogo}
                                             />
                                         </div>
                                     </div>
@@ -655,7 +657,7 @@ function Main() {
                                         <div className="w-10 h-10 flex-none image-fit rounded-full overflow-hidden">
                                             <img
                                                 alt="Midone Tailwind HTML Admin Template"
-                                                src={$f()[6].photos[0]}
+                                                src={tempLogo}
                                             />
                                         </div>
                                     </div>
