@@ -142,85 +142,136 @@ function Main() {
                             </div>
                         </div>
                         {/* BEGIN: Users Layout */}
-                        {properties.map((p) => (
-                            <div
-                                key={p?.property_id}
-                                className="intro-y col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
-                            >
-                                <div className="box">
-                                    <div className="p-5">
-                                        <div className="h-40 2xl:h-56 image-fit rounded-md overflow-hidden before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black before:to-black/10">
-                                            <img
-                                                alt="Midone - HTML Admin Template"
-                                                className="rounded-md"
-                                                src={image1}
+                        {properties.length <= 0 ? (
+                            <div className="w-[70vw] flex justify-center items-center">
+                                <div className="flex flex-col items-center justify-center py-16 text-center">
+                                    <div className="flex flex-col items-center bg-gray-50 border border-gray-200 rounded-2xl p-8 shadow-sm">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="w-16 h-16 mb-4 text-gray-400"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1016.65 16.65z"
                                             />
-                                            {/* {faker.trueFalse[0] && (
+                                        </svg>
+                                        <h2 className="text-xl font-semibold text-gray-700 mb-1">
+                                            Nothing Found
+                                        </h2>
+                                        <p className="text-sm text-gray-500 max-w-sm">
+                                            We couldn’t find any results for your search. Try
+                                            different keywords or filters.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                {properties.map((p) => (
+                                    <div
+                                        key={p?.property_id}
+                                        className="intro-y col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
+                                    >
+                                        <div className="box">
+                                            <div className="p-5">
+                                                <div className="h-40 2xl:h-56 image-fit rounded-md overflow-hidden before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black before:to-black/10">
+                                                    <img
+                                                        alt="Midone - HTML Admin Template"
+                                                        className="rounded-md"
+                                                        src={image1}
+                                                    />
+                                                    {/* {faker.trueFalse[0] && (
                                         <span className="absolute top-0 bg-pending/80 text-white text-xs m-5 px-2 py-1 rounded z-10">
                                             Featured
                                         </span>
                                     )} */}
-                                            <div className="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                                <a href="" className="block font-medium text-base">
-                                                    {p?.agent_name}
-                                                </a>
-                                                <span className="text-white/90 text-xs mt-3">
-                                                    {p?.property_category}
-                                                </span>
+                                                    <div className="absolute bottom-0 text-white px-5 pb-6 z-10">
+                                                        <a
+                                                            href=""
+                                                            className="block font-medium text-base"
+                                                        >
+                                                            {p?.agent_name}
+                                                        </a>
+                                                        <span className="text-white/90 text-xs mt-3">
+                                                            {p?.property_category}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="text-slate-600 dark:text-slate-500 mt-5">
+                                                    <div className="flex items-center">
+                                                        <Lucide
+                                                            icon="Link"
+                                                            className="w-4 h-4 mr-2"
+                                                        />{" "}
+                                                        Price: ${p?.price}
+                                                    </div>
+                                                    <div className="flex items-center mt-2">
+                                                        <Lucide
+                                                            icon="Layers"
+                                                            className="w-4 h-4 mr-2"
+                                                        />{" "}
+                                                        <p className="flex items-center gap-2">
+                                                            Property-Type:
+                                                            <span>{p?.property_type}</span>
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center mt-2">
+                                                        <Lucide
+                                                            icon="CheckSquare"
+                                                            className="w-4 h-4 mr-2"
+                                                        />{" "}
+                                                        <p className="flex items-center gap-2">
+                                                            Availability:
+                                                            <span>{p?.availability}</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="text-slate-600 dark:text-slate-500 mt-5">
-                                            <div className="flex items-center">
-                                                <Lucide icon="Link" className="w-4 h-4 mr-2" />{" "}
-                                                Price: ${p?.price}
-                                            </div>
-                                            <div className="flex items-center mt-2">
-                                                <Lucide icon="Layers" className="w-4 h-4 mr-2" />{" "}
-                                                <p className="flex items-center gap-2">
-                                                    Property-Type:
-                                                    <span>{p?.property_type}</span>
+                                            <div className="flex justify-center lg:justify-end items-center p-5 border-t border-slate-200/60 dark:border-darkmode-400">
+                                                <p
+                                                    className="flex items-center text-primary mr-auto cursor-pointer"
+                                                    onClick={(e) =>
+                                                        handlePreview(e, p?.property_id)
+                                                    }
+                                                >
+                                                    <Lucide icon="Eye" className="w-4 h-4 mr-1" />{" "}
+                                                    Preview
                                                 </p>
-                                            </div>
-                                            <div className="flex items-center mt-2">
-                                                <Lucide
-                                                    icon="CheckSquare"
-                                                    className="w-4 h-4 mr-2"
-                                                />{" "}
-                                                <p className="flex items-center gap-2">
-                                                    Availability:
-                                                    <span>{p?.availability}</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-center lg:justify-end items-center p-5 border-t border-slate-200/60 dark:border-darkmode-400">
-                                        <p
-                                            className="flex items-center text-primary mr-auto cursor-pointer"
-                                            onClick={(e) => handlePreview(e, p?.property_id)}
-                                        >
-                                            <Lucide icon="Eye" className="w-4 h-4 mr-1" /> Preview
-                                        </p>
 
-                                        <p
-                                            onClick={(e) => handleEdit(e, p?.property_id)}
-                                            className="flex items-center mr-3 cursor-pointer"
-                                        >
-                                            <Lucide icon="CheckSquare" className="w-4 h-4 mr-1" />{" "}
-                                            Edit
-                                        </p>
-                                        <a
-                                            className="flex items-center text-danger"
-                                            href="#"
-                                            onClick={() => {
-                                                setDeleteConfirmationModal(true);
-                                            }}
-                                        >
-                                            <Lucide icon="Trash2" className="w-4 h-4 mr-1" /> Delete
-                                        </a>
+                                                <p
+                                                    onClick={(e) => handleEdit(e, p?.property_id)}
+                                                    className="flex items-center mr-3 cursor-pointer"
+                                                >
+                                                    <Lucide
+                                                        icon="CheckSquare"
+                                                        className="w-4 h-4 mr-1"
+                                                    />{" "}
+                                                    Edit
+                                                </p>
+                                                <a
+                                                    className="flex items-center text-danger"
+                                                    href="#"
+                                                    onClick={() => {
+                                                        setDeleteConfirmationModal(true);
+                                                    }}
+                                                >
+                                                    <Lucide
+                                                        icon="Trash2"
+                                                        className="w-4 h-4 mr-1"
+                                                    />{" "}
+                                                    Delete
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
+                                ))}
+                            </>
+                        )}
                         {/* END: Users Layout */}
                         {/* BEGIN: Pagination */}
                         <div className="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">

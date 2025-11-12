@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingUi from "../components/loading-ui/Main.jsx";
-import ErrorUI from "../components/error-ui/Main.jsx"
+import ErrorUI from "../components/error-ui/Main.jsx";
 
 function Main() {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
@@ -31,6 +31,7 @@ function Main() {
     const handleKeyDown = (event) => {
         if (event.key == "Enter") {
             fetchLead({ search: searchQuery });
+            setSearchQuery("")
         }
         // You can access other properties of the event object, like event.keyCode, event.code, etc.
     };
@@ -79,9 +80,7 @@ function Main() {
 
     if (error) {
         console.warn("⚠️ Error UI shown:", error);
-        return (
-           <ErrorUI handlerFunc={fetchLead}/>
-        );
+        return <ErrorUI handlerFunc={fetchLead} />;
     }
 
     if (loading) {
@@ -195,14 +194,47 @@ function Main() {
                             </tr>
                         </thead>
                         <tbody>
-                            {leads.map((lead) => (
-                                <tr key={lead?.lead_id} className="intro-x">
-                                    <td className="w-10">
-                                        <input className="form-check-input" type="checkbox" />
-                                    </td>
-                                    <td className="!py-3.5">
-                                        <div className="flex items-center">
-                                            {/* <div className="w-9 h-9 image-fit zoom-in">
+                            {leads.length <= 0 ? (
+                                <div className="w-[70vw] flex justify-center items-center">
+                                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                                        <div className="flex flex-col items-center bg-gray-50 border border-gray-200 rounded-2xl p-8 shadow-sm">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="w-16 h-16 mb-4 text-gray-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1016.65 16.65z"
+                                                />
+                                            </svg>
+                                            <h2 className="text-xl font-semibold text-gray-700 mb-1">
+                                                Nothing Found
+                                            </h2>
+                                            <p className="text-sm text-gray-500 max-w-sm">
+                                                We couldn’t find any results for your search. Try
+                                                different keywords or filters.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {leads.map((lead) => (
+                                        <tr key={lead?.lead_id} className="intro-x">
+                                            <td className="w-10">
+                                                <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                />
+                                            </td>
+                                            <td className="!py-3.5">
+                                                <div className="flex items-center">
+                                                    {/* <div className="w-9 h-9 image-fit zoom-in">
                                                 <Tippy
                                                     tag="img"
                                                     alt="Midone - HTML Admin Template"
@@ -211,49 +243,58 @@ function Main() {
                                                     content={`Uploaded at ${faker.dates[0]}`}
                                                 />
                                             </div> */}
-                                            <div className="ml-4">
-                                                <a
-                                                    href=""
-                                                    className="font-medium whitespace-nowrap"
-                                                >
-                                                    {lead?.name}
-                                                </a>
-                                                <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                                                    {lead?.email}
+                                                    <div className="ml-4">
+                                                        <a
+                                                            href=""
+                                                            className="font-medium whitespace-nowrap"
+                                                        >
+                                                            {lead?.name}
+                                                        </a>
+                                                        <div className="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                                                            {lead?.email}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="text-center">{lead?.mobile}</td>
-                                    <td className="text-center capitalize">{lead?.source}</td>
-                                    <td className="w-40 text-center">{lead?.status}</td>
-                                    <td className="text-center">Rs. {lead?.budget_max}</td>
-                                    <td className="table-report__action w-56">
-                                        <div className="flex justify-center items-center">
-                                            <p
-                                                onClick={(e) => handleEdit(e, lead?.lead_id)}
-                                                className="flex items-center mr-3 cursor-pointer"
-                                            >
-                                                <Lucide
-                                                    icon="CheckSquare"
-                                                    className="w-4 h-4 mr-1"
-                                                />{" "}
-                                                Edit
-                                            </p>
-                                            <p
-                                                className="flex items-center text-danger cursor-pointer"
-                                                onClick={() => {
-                                                    setDeleteLeadId(lead?.lead_id);
-                                                    setDeleteConfirmationModal(true);
-                                                }}
-                                            >
-                                                <Lucide icon="Trash2" className="w-4 h-4 mr-1" />{" "}
-                                                Delete
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                            </td>
+                                            <td className="text-center">{lead?.mobile}</td>
+                                            <td className="text-center capitalize">
+                                                {lead?.source}
+                                            </td>
+                                            <td className="w-40 text-center">{lead?.status}</td>
+                                            <td className="text-center">Rs. {lead?.budget_max}</td>
+                                            <td className="table-report__action w-56">
+                                                <div className="flex justify-center items-center">
+                                                    <p
+                                                        onClick={(e) =>
+                                                            handleEdit(e, lead?.lead_id)
+                                                        }
+                                                        className="flex items-center mr-3 cursor-pointer"
+                                                    >
+                                                        <Lucide
+                                                            icon="CheckSquare"
+                                                            className="w-4 h-4 mr-1"
+                                                        />{" "}
+                                                        Edit
+                                                    </p>
+                                                    <p
+                                                        className="flex items-center text-danger cursor-pointer"
+                                                        onClick={() => {
+                                                            setDeleteLeadId(lead?.lead_id);
+                                                            setDeleteConfirmationModal(true);
+                                                        }}
+                                                    >
+                                                        <Lucide
+                                                            icon="Trash2"
+                                                            className="w-4 h-4 mr-1"
+                                                        />{" "}
+                                                        Delete
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </>
+                            )}
                         </tbody>
                     </table>
                 </div>

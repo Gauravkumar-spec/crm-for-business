@@ -198,9 +198,33 @@ function Main() {
                                 </thead>
                                 <tbody>
                                     {properties.length <= 0 ? (
-                                        <span className="font-semibold text-blue-500 text-center text-lg">
-                                            Nothing Found...
-                                        </span>
+                                       <div className="w-[70vw] flex justify-center items-center">
+                                         <div className="flex flex-col items-center justify-center py-16 text-center">
+                                            <div className="flex flex-col items-center bg-gray-50 border border-gray-200 rounded-2xl p-8 shadow-sm">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="w-16 h-16 mb-4 text-gray-400"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1016.65 16.65z"
+                                                    />
+                                                </svg>
+                                                <h2 className="text-xl font-semibold text-gray-700 mb-1">
+                                                    Nothing Found
+                                                </h2>
+                                                <p className="text-sm text-gray-500 max-w-sm">
+                                                    We couldn’t find any results for your search.
+                                                    Try different keywords or filters.
+                                                </p>
+                                            </div>
+                                        </div>
+                                       </div>
                                     ) : (
                                         <>
                                             {properties.map((p) => (
