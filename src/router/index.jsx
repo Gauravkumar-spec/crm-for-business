@@ -76,6 +76,10 @@ import Agents from "../pages/Agent";
 import EditAgent from "../pages/EditAgent.jsx";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Login from "../pages/Login";
+import ViewExcelPage from "../pages/ViewExcelPage.jsx";
+import UploadExcelPage from "../pages/UploadExcelPage.jsx";
+import UploadExcelPage2 from "../pages/UploadExcelPage2.jsx"
+
 
 // temp imports
 import LeadConverion from "../views/dashboard-overview-1/graphs/LeadConverion.jsx";
@@ -171,6 +175,19 @@ function Router() {
                 {
                     path: "product-grid",
                     element: <PropertyGrid />,
+                },
+                {
+                    path:"upload-excel",
+                    element:<UploadExcelPage/>
+                },
+                {
+                    path:"upload-excel2",
+                    element:<UploadExcelPage2/>
+
+                },
+                {
+                    path:"view-excel",
+                    element:<ViewExcelPage/>
                 },
                 {
                     path: "product-preview/:id",
