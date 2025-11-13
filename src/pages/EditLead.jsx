@@ -6,6 +6,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { buildLeadValidationSchema } from "../utils/validationSchemas/leadSchema.js";
 import { FiBriefcase, FiCalendar, FiFileText, FiGlobe, FiHome } from "react-icons/fi";
 import { tableApi } from "../api/tableApi.js";
+import ErrorUI from "../components/error-ui/Main.jsx";
+import LoadingUI from "../components/loading-ui/Main.jsx";
 
 function EditLead() {
     const { id } = useParams();
@@ -184,38 +186,11 @@ function EditLead() {
     };
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen bg-zinc-200 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="relative inline-flex">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 animate-spin"></div>
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-zinc-900 rounded-full"></div>
-                    </div>
-                    <p className="mt-4 text-lg text-blue-500 font-semibold tracking-wider">
-                        LOADING LEAD DETAILS
-                    </p>
-                </div>
-            </div>
-        );
+        return <LoadingUI message="Loading Lead..." />;
     }
 
     if (error) {
-        return (
-            <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-                <div className="bg-gradient-to-br from-red-900/40 to-red-800/30 border border-red-800/50 text-red-300 px-6 py-4 rounded-xl max-w-md mx-auto backdrop-blur-sm">
-                    <div className="flex items-center space-x-2">
-                        <Lucide icon="XCircle" className="h-6 w-6" />
-                        <span>Failed to load lead data</span>
-                    </div>
-                    <Link
-                        to="/dashboard/lead-list"
-                        className="mt-3 text-gray-200 hover:text-cyan-300 text-sm inline-block"
-                    >
-                        Back to Leads
-                    </Link>
-                </div>
-            </div>
-        );
+        return <ErrorUI handlerFunc={fetchLeadById} />;
     }
 
     return (

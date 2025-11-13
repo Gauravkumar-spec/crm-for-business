@@ -26,6 +26,7 @@ function PropertyPreview() {
     const fetchPropertyPreview = async () => {
         try {
             setLoading(true);
+            setError(null)
             const response = await propertyApi.propertyPreview({
                 property_id: id,
                 client_id: 1,

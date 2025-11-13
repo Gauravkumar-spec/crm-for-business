@@ -21,6 +21,7 @@ function EditAgent() {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
+                setError(null)
 
                 const response = await agentApi.agentPreview({
                     name: agentName,

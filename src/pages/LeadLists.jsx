@@ -39,6 +39,7 @@ function Main() {
 
   const fetchLead = async (data = {}) => {
     setLoading(true);
+    setError(null)
     const payload = {
       search: null,
       client_id: 1,

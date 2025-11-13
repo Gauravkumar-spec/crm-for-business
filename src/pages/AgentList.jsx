@@ -23,6 +23,7 @@ function AgentList() {
     const fetchAgents = async () => {
         try {
             setLoading(true);
+            setError(null)
             const payload = {
                 status: null,
                 search: null,

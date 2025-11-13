@@ -16,6 +16,7 @@ const AgentPreview = () => {
     const fetchAgentDetails = async () => {
         try {
             setLoading(true);
+            setError(null)
             const payload = {
                 name: agentName,
                 client_id: 1,
