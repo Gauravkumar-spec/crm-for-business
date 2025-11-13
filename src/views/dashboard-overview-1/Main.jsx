@@ -516,7 +516,7 @@ function Main() {
                                                     "text-danger": !faker.trueFalse[0],
                                                 })}
                                             >
-                                                {faker.trueFalse[0] ? "+" : "-"}${faker.totals[0]}
+                                                {faker.trueFalse[0] ? "+" : "-"}₹{faker.totals[0]}
                                             </div>
                                         </div>
                                     </div>

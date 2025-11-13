@@ -4,6 +4,8 @@ import { Lucide, Modal, ModalBody } from "@/base-components";
 import { agentApi } from "../api/agentApi.js";
 import { agentValidationSchema } from "../utils/validationSchemas/agentSchema.js";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import LoaderUI from "../components/loading-ui/Main.jsx";
+import ErrorUI from "../components/error-ui/Main.jsx";
 
 function EditAgent() {
     const { agentName } = useParams();
@@ -17,34 +19,35 @@ function EditAgent() {
     const [image, setImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                setError(null)
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
 
-                const response = await agentApi.agentPreview({
-                    name: agentName,
-                    client_id: 1,
-                });
+            const response = await agentApi.agentPreview({
+                name: agentName,
+                client_id: 1,
+            });
 
-                console.log("Fetch Agent:- ", response.data[0]);
-                if (response.data) {
-                    setAgent(response.data[0]);
+            console.log("Fetch Agent:- ", response.data[0]);
+            if (response.data) {
+                setAgent(response.data[0]);
 
-                    if (response.data[0].image) {
-                        setPreviewImage(
-                            `${import.meta.env.VITE_BASE_URL}uploads/${response.data[0].image}`
-                        );
-                    }
+                if (response.data[0].image) {
+                    setPreviewImage(
+                        `${import.meta.env.VITE_BASE_URL}uploads/${response.data[0].image}`
+                    );
                 }
-            } catch (err) {
-                console.error("Failed to fetch agent", err);
-                setError(err)
-            } finally {
-                setIsLoading(false);
             }
-        };
+        } catch (err) {
+            console.error("Failed to fetch agent", err);
+            setError(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
     }, [agentName]);
 
@@ -82,48 +85,20 @@ function EditAgent() {
     };
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen bg-zinc-200 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="relative inline-flex">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 animate-spin"></div>
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-zinc-900 rounded-full"></div>
-                    </div>
-                    <p className="mt-4 text-lg text-blue-500 font-semibold tracking-wider">
-                        LOADING AGENT DETAILS
-                    </p>
-                </div>
-            </div>
-        );
+        return <LoaderUI message="Loading Agent..." />;
     }
 
     if (error) {
-        return (
-            <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-                <div className="bg-gradient-to-br from-red-900/40 to-red-800/30 border border-red-800/50 text-red-300 px-6 py-4 rounded-xl max-w-md mx-auto backdrop-blur-sm">
-                    <div className="flex items-center space-x-2">
-                        <Lucide icon="XCircle" className="h-6 w-6" />
-                        <span>Failed to load agent data</span>
-                    </div>
-                    <Link
-                        to="/dashboard/agentslist"
-                        className="mt-3 text-gray-200 hover:text-cyan-300 text-sm inline-block"
-                    >
-                        Back to Agents
-                    </Link>
-                </div>
-            </div>
-        );
+        return <ErrorUI handlerFunc={fetchData} />;
     }
 
     return (
         <>
-            <div className="intro-y flex items-center mt-8">
-                <h2 className="text-lg font-medium mr-auto text-white">Edit Agent</h2>
-                <Link to="/dashboard/agentslist" className="btn btn-outline-secondary">
-                    <Lucide icon="ArrowLeft" className="w-4 h-4 mr-2 text-gray-200" /> Back to
-                    Agents
+            <div className="flex items-center gap-5 mt-8">
+               <Link onClick={()=> navigate(-1)} className="flex items-center hover:cursor-pointer">
+                    <Lucide icon="ArrowLeft" className={'h-4 w-4'}/> Back
                 </Link>
+                <h2 className="text-lg font-medium">Edit Agent</h2>
             </div>
 
             <div className="grid grid-cols-12 gap-6 mt-5">

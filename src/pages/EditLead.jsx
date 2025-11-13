@@ -195,11 +195,11 @@ function EditLead() {
 
     return (
         <>
-            <div className="intro-y flex items-center mt-8">
-                <h2 className="text-lg font-medium mr-auto text-white">Edit Lead</h2>
-                <Link to="/dashboard/seller-list" className="btn btn-outline-secondary">
-                    <Lucide icon="ArrowLeft" className="w-4 h-4 mr-2 text-gray-200" /> Back to Leads
+            <div className="flex items-center gap-5 mt-8">
+                <Link onClick={()=> navigate(-1)} className="flex items-center hover:cursor-pointer">
+                    <Lucide icon="ArrowLeft" className={'h-4 w-4'}/> Back
                 </Link>
+                <h2 className="text-lg font-medium">Edit Lead</h2>
             </div>
 
             <div className="grid grid-cols-12 gap-6 mt-5">

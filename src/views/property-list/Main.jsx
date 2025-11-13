@@ -134,13 +134,14 @@ function Main() {
         <LoaderUI message="Loading Property" />
       ) : (
         <>
-          <h2 className="intro-y text-lg font-medium mt-10">Product List</h2>
+          <h2 className="intro-y text-lg font-medium mt-10">Property Inventory</h2>
           <div className="grid grid-cols-12 gap-6 mt-5">
-            <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
-              <button className="btn btn-primary shadow-md mr-2">
+            <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2 gap-5">
+              {/* <button className="btn btn-primary shadow-md mr-2">
                 Add New Product
-              </button>
-              <button
+              </button> */}
+              <div className="flex gap-2 items-center">
+                <button
                 onClick={() => exportPropertiesToExcel(properties)}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
               >
@@ -153,8 +154,9 @@ function Main() {
               >
                 📂 Upload Excel
               </button>
+              </div>
 
-              <Dropdown>
+              {/* <Dropdown>
                 <DropdownToggle className="btn px-2 box">
                   <span className="w-5 h-5 flex items-center justify-center">
                     <Lucide icon="Plus" className="w-4 h-4" />
@@ -178,7 +180,7 @@ function Main() {
               </Dropdown>
               <div className="hidden md:block mx-auto text-slate-500">
                 Showing 1 to 10 of 150 entries
-              </div>
+              </div> */}
               <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
                 <div className="w-56 relative text-slate-500">
                   <input

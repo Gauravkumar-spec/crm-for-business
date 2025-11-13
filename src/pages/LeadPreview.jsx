@@ -83,7 +83,6 @@ const LeadPreview = () => {
         }
     };
 
-    const handleEdit = () => {};
 
     if (loading) {
         return <LoadingUI message="Loading Lead" />;
@@ -118,6 +117,7 @@ const LeadPreview = () => {
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-4 mt-4 sm:mt-0">
+                                    <span className="text-lg font-semibold-">Lead Status: </span>
                                     <span
                                         className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
                                             lead?.status
@@ -125,13 +125,13 @@ const LeadPreview = () => {
                                     >
                                         {lead?.status}
                                     </span>
-                                    <button
+                                    {/* <button
                                         onClick={handleEdit}
                                         className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
                                     >
                                         <FiEdit className="mr-2" />
                                         Edit Lead
-                                    </button>
+                                    </button> */}
                                 </div>
                             </div>
                         </div>
@@ -432,13 +432,7 @@ const LeadPreview = () => {
                         >
                             Back to List
                         </button>
-                        <button
-                            onClick={handleEdit}
-                            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center"
-                        >
-                            <FiEdit className="mr-2" />
-                            Edit Lead
-                        </button>
+                       
                     </div>
                 </div>
             )}

@@ -31,9 +31,9 @@ function Main(props) {
     return (
         <>
             {/* BEGIN: Top Bar */}
-            <div className="top-bar">
+            <div className="top-bar flex justify-end">
                 {/* BEGIN: Breadcrumb */}
-                <nav aria-label="breadcrumb" className="-intro-x mr-auto hidden sm:flex">
+                {/* <nav aria-label="breadcrumb" className="-intro-x mr-auto hidden sm:flex">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item">
                             <a href="#">Application</a>
@@ -42,7 +42,7 @@ function Main(props) {
                             Dashboard
                         </li>
                     </ol>
-                </nav>
+                </nav> */}
                 {/* END: Breadcrumb */}
                 {/* BEGIN: Search */}
                 <div className="intro-x relative mr-3 sm:mr-6">

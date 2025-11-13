@@ -148,13 +148,19 @@ function AgentList() {
                                             <p className="text-gray-700">{agent?.mobile}</p>
                                             <div className="mt-6 flex space-x-2">
                                                 <button
-                                                    onClick={(e) => handleEdit(e, agent?.name)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleEdit(e, agent?.name)
+                                                    }}
                                                     className="flex-1 py-2 px-3 bg-gray-200 hover:bg-blue-400 text-gray-900 rounded-lg transition-all"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(agent?.agent_id)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        handleDelete(agent?.agent_id)
+                                                    }}
                                                     className="flex-1 py-2 px-3 bg-gray-200 hover:bg-red-400 text-gray-900 rounded-lg transition-all"
                                                 >
                                                     Delete

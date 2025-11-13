@@ -16,13 +16,18 @@ import { faker as $f } from "../../pages/PropertyList";
 import { useNavigate } from "react-router-dom";
 import ErrorUI from "../../components/error-ui/Main.jsx";
 import LoaderUI from "../../components/loading-ui/Main.jsx";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import { leadApi } from "../../api/leadApi.js";
 
 function Main() {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
     const [leadSearch] = useLeadSearchMutation();
     const [leads, setLeads] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [deleteLeadId, setDeleteLeadId] = useState(null);
 
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
@@ -36,7 +41,7 @@ function Main() {
 
     const fetchLead = async (data = {}) => {
         setLoading(true);
-        setError(null)
+        setError(null);
         const payload = {
             search: null,
             client_id: 1,
@@ -77,6 +82,46 @@ function Main() {
         fetchLead();
     }, []);
 
+    const handleEdit = (e, id) => {
+        console.log("handle edit run....");
+        e.preventDefault();
+        navigate(`/dashboard/edit-lead/${id}`);
+    };
+
+    // Temp. fix
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        setDeleteLoading(true);
+
+        try {
+            const response = await leadApi.deleteLead({
+                lead_id: deleteLeadId,
+                client_id: 1,
+            });
+
+            if (response) {
+                toast.success("Property saved successfully!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    theme: "dark",
+                });
+
+                await fetchLead();
+                setDeleteConfirmationModal(false);
+            }
+        } catch (error) {
+            console.log("Error: ", error.message);
+            toast.error(error.message, {
+                position: "top-center",
+                autoClose: 3000,
+                theme: "dark",
+            });
+            setDeleteConfirmationModal(false);
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
     if (error) {
         console.warn("⚠️ Error UI shown:", error);
         return <ErrorUI handlerFunc={fetchLead} />;
@@ -89,8 +134,8 @@ function Main() {
     return (
         <>
             <div className="intro-y flex flex-col sm:flex-row items-center mt-8">
-                <h2 className="text-lg font-medium mr-auto">Seller Details</h2>
-                <div className="w-full sm:w-auto flex mt-4 sm:mt-0">
+                <h2 className="text-lg font-medium mr-auto">Lead Inventory</h2>
+                {/* <div className="w-full sm:w-auto flex mt-4 sm:mt-0">
                     <button className="btn btn-primary shadow-md mr-2">Print</button>
                     <Dropdown className="ml-auto sm:ml-0">
                         <DropdownToggle className="btn px-2 box">
@@ -109,7 +154,7 @@ function Main() {
                             </DropdownContent>
                         </DropdownMenu>
                     </Dropdown>
-                </div>
+                </div> */}
             </div>
             {/* BEGIN: Seller Details */}
             <div className="intro-y grid grid-cols-11 gap-5 mt-5">
@@ -295,19 +340,22 @@ function Main() {
                                         >
                                             <Lucide icon="Eye" className="w-4 h-4 mr-1" /> Preview
                                         </p>
-                                        <a className="flex items-center mr-3" href="#">
+                                        <p
+                                            onClick={(e) => handleEdit(e, lead?.lead_id)}
+                                            className="flex items-center mr-3 cursor-pointer"
+                                        >
                                             <Lucide icon="CheckSquare" className="w-4 h-4 mr-1" />{" "}
                                             Edit
-                                        </a>
-                                        <a
-                                            className="flex items-center text-danger"
-                                            href="#"
+                                        </p>
+                                        <p
+                                            className="flex items-center text-danger cursor-pointer"
                                             onClick={() => {
+                                                setDeleteLeadId(lead?.lead_id);
                                                 setDeleteConfirmationModal(true);
                                             }}
                                         >
                                             <Lucide icon="Trash2" className="w-4 h-4 mr-1" /> Delete
-                                        </a>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -401,13 +449,19 @@ function Main() {
                         >
                             Cancel
                         </button>
-                        <button type="button" className="btn btn-danger w-24">
-                            Delete
+                        <button
+                            onClick={(e) => handleDelete(e)}
+                            type="button"
+                            className="btn btn-danger w-24"
+                        >
+                            {deleteLoading ? "Deleting..." : "Delete"}
                         </button>
                     </div>
                 </ModalBody>
             </Modal>
             {/* END: Delete Confirmation Modal */}
+
+            <ToastContainer />
         </>
     );
 }

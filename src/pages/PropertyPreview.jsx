@@ -4,6 +4,7 @@ import { FiHome, FiDollarSign, FiMapPin, FiCheck, FiShare2, FiHeart } from "reac
 import { propertyApi } from "../api/propertyApi.js";
 import LoaderUI from "../components/loading-ui/Main.jsx";
 import ErrorUI from "../components/error-ui/Main.jsx";
+import { ArrowLeft } from "lucide-react";
 
 function PropertyPreview() {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ function PropertyPreview() {
     const fetchPropertyPreview = async () => {
         try {
             setLoading(true);
-            setError(null)
+            setError(null);
             const response = await propertyApi.propertyPreview({
                 property_id: id,
                 client_id: 1,
@@ -89,6 +90,12 @@ function PropertyPreview() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-darkmode-900">
             <div className="container mx-auto px-4 py-8">
+                <button
+                    onClick={()=> navigate(-1)}
+                    className="mb-4 inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-primary transition font-medium"
+                >
+                    <ArrowLeft className="w-5 h-5" /> Back
+                </button>
                 {/* Property Header */}
                 <div className="bg-white dark:bg-darkmode-800 rounded-lg shadow-md p-6 mb-6">
                     <div className="flex justify-between items-start">
