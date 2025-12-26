@@ -62,11 +62,9 @@ function Main() {
         };
 
         const OriginalPayload = { ...payload, ...data };
-        
 
         try {
             const response = await leadApi.leadSearch(OriginalPayload);
-            
 
             setLeads(response.data);
         } catch (error) {
@@ -91,7 +89,6 @@ function Main() {
     }
 
     const handleEdit = (e, id) => {
-       
         e.preventDefault();
         navigate(`/dashboard/edit-lead/${id}`);
     };
@@ -161,40 +158,41 @@ function Main() {
                     <div className="hidden xl:block mx-auto text-slate-500">
                         Showing 1 to 10 of 150 entries
                     </div> */}
-                    <div className="w-full xl:w-auto flex items-center mt-3 xl:mt-0">
-                        <div className="w-56 relative text-slate-500">
-                            <input
-                                onKeyDown={handleKeyDown}
-                                type="text"
-                                className="form-control w-56 box pr-10"
-                                placeholder="Search..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            <Lucide
-                                icon="Search"
-                                className="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0"
-                            />
+                    <div className="w-full flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between mt-3 xl:mt-0">
+                        {/* 🔍 Search */}
+                        <div className="w-full xl:w-auto">
+                            <div className="relative text-slate-500">
+                                <input
+                                    onKeyDown={handleKeyDown}
+                                    type="text"
+                                    className="form-control w-full xl:w-56 box pr-10"
+                                    placeholder="Search..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                <Lucide
+                                    icon="Search"
+                                    className="w-4 h-4 absolute my-auto inset-y-0 right-3"
+                                />
+                            </div>
                         </div>
-                        <select className="w-56 xl:w-auto form-select box ml-2">
-                            <option>Status</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
 
-                        <button
-                            onClick={() => exportLeadsToExcel(leads)}
-                            className="btn btn-success"
-                        >
-                            📊 Export Leads to Excel
-                        </button>
+                        {/* 📊 Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-2 w-full xl:w-auto">
+                            <button
+                                onClick={() => exportLeadsToExcel(leads)}
+                                className="btn btn-success w-full sm:w-auto"
+                            >
+                                📊 Export Leads
+                            </button>
 
-                        <button
-                            onClick={() => navigate("/dashboard/upload-excel")}
-                            className="btn btn-warning shadow-md ml-2"
-                        >
-                            📂 Upload Excel
-                        </button>
+                            <button
+                                onClick={() => navigate("/dashboard/upload-excel")}
+                                className="btn btn-warning shadow-md w-full sm:w-auto"
+                            >
+                                📂 Upload Excel
+                            </button>
+                        </div>
                     </div>
                 </div>
                 {/* BEGIN: Data List */}
