@@ -4,11 +4,11 @@ export const propertyValidationSchema = Yup.object().shape({
     agent_email: Yup.string().when("$isEditMode", {
         is: true,
         then: (schema) => {
-          console.log("Edit mode validation run...");
+          
           schema.notRequired().nullable()
         },
         otherwise: (schema) => {
-          console.log("Create mode validation run...");
+          
           schema.email("Invalid email").required("Required")
         },
     }),

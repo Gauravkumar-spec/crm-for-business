@@ -111,8 +111,7 @@ function Agent() {
 
     // Form submission
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log("🟡 Step 1: Raw Formik Values =>", values);
-        console.log(values, "form values");
+    
         try {
             // let imageUrl = "";
             // if (values.profile) {
@@ -140,11 +139,9 @@ function Agent() {
                 // profile_photo_url: "abc.png", // send Base64 as URL
             };
 
-            console.log("🟡 Step 4: Final Payload =>", payload);
 
             const res = await agentApi.createAgent(payload);
-            console.log(res, "response from setAgent");
-            console.log("✅ Step 5: API Response =>", res);
+            
             if (res?.message) {
                 toast.success("Lead saved successfully!", {
                     position: "top-center",
@@ -165,7 +162,7 @@ function Agent() {
             console.error("❌ Step 6: API Error =>", err);
             setErrorMessage(err?.data?.message || "Failed to register agent.");
         } finally {
-            console.log("🟡 Step 7: Finished submission cycle");
+       
             setSubmitting(false);
         }
     };

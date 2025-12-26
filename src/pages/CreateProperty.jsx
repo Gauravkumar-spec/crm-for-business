@@ -60,8 +60,8 @@ function PropertyListingForm() {
     const { id } = useParams();
 
     const [editData, setEditData] = useState(null);
-    console.log("edit property data:- ", editData);
-   const isEditMode = Boolean(editData?.property_id);
+
+    const isEditMode = Boolean(editData?.property_id);
 
     const [currentStep, setCurrentStep] = useState(1);
     const [imageFiles, setImageFiles] = useState([]);
@@ -109,14 +109,14 @@ function PropertyListingForm() {
     const fieldProps = getFieldProps();
 
     useEffect(() => {
-    if (isPreview && previewData?.images) {
-        setImageFiles(Array.isArray(previewData.images) ? previewData.images : []);
-    } else if (editData?.images) {
-        setImageFiles(Array.isArray(editData.images) ? editData.images : []);
-    } else {
-        setImageFiles([]);
-    }
-}, [isPreview, previewData, editData]);
+        if (isPreview && previewData?.images) {
+            setImageFiles(Array.isArray(previewData.images) ? previewData.images : []);
+        } else if (editData?.images) {
+            setImageFiles(Array.isArray(editData.images) ? editData.images : []);
+        } else {
+            setImageFiles([]);
+        }
+    }, [isPreview, previewData, editData]);
 
     useEffect(() => {
         const fetchDropDownData = async () => {
@@ -125,7 +125,7 @@ function PropertyListingForm() {
                 const propertyRes = await tableApi.dataTable({
                     table_name: "PropertyType",
                 });
-                console.log("propertyRes after tableApi: ", propertyRes);
+
                 const propertyCatRes = await tableApi.dataTable({
                     table_name: "PropertyCategory",
                 });
@@ -301,10 +301,7 @@ function PropertyListingForm() {
     const prevStep = () => setCurrentStep((prev) => prev - 1);
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log("Enter into handleSubmit func.");
-
         if (isPreview) {
-            console.log("Cannot submit in preview mode");
             return;
         }
         try {
@@ -339,22 +336,16 @@ function PropertyListingForm() {
                 property_age: Number(values.property_age),
             };
 
-            console.log(payload);
             let res;
             if (editData?.property_id) {
                 res = await propertyApi.updateProperty({
                     ...payload,
                     property_id: editData.property_id,
                 });
-
-                console.log("updated property: ", res);
             } else {
-                console.log("MOve into else part");
-                console.log("Payload being sent:", JSON.stringify(payload, null, 2));
                 res = await propertyApi.createProperty(payload);
-                console.log(`Res in handle Submit: ${res}`);
             }
-            console.log("Property submitted successfully:", res);
+            
             if (res?.message) {
                 toast.success("Property saved successfully!", {
                     position: "top-center",
@@ -378,26 +369,26 @@ function PropertyListingForm() {
                 }
             );
             console.error("Error details:", err?.data || err?.error || err);
-            console.log(err.data);
+           
         } finally {
             setSubmitting(false);
         }
     };
 
     useEffect(() => {
-        console.log("Edit property run...", id);
+       
 
         if (id) {
-            console.log("Fn Run...");
+            
             (async () => {
                 try {
                     const response = await propertyApi.propertyPreview({
                         property_id: id,
                         client_id: 1,
                     });
-                    console.log(response);
+                    
                     if (response) {
-                        console.log("Fetched property for edit: ", response);
+                    
                         setEditData(response);
                     }
                 } catch (err) {

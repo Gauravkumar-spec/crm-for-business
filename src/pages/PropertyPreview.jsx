@@ -34,12 +34,12 @@ function PropertyPreview() {
             });
 
             if (response) {
-                console.log("property preview fetch successfully: ", response);
+                
                 setPreviewData(response);
             }
         } catch (error) {
             setError(error);
-            console.log("Failed to fetch property-preview: ", error);
+            
         } finally {
             setLoading(false);
         }
@@ -78,12 +78,12 @@ function PropertyPreview() {
     }, [previewData]);
 
     if (loading) {
-        console.log("⏳ Loading agents...");
+        
         return <LoaderUI message="Loading Property Details" />;
     }
 
     if (error) {
-        console.warn("⚠️ Error UI shown:", error);
+        
         return <ErrorUI handlerFunc={fetchPropertyPreview} />;
     }
 

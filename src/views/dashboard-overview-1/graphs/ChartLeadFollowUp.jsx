@@ -66,10 +66,6 @@ function Main(props) {
             const actualYear = date.getFullYear();
 
             const todayDate = new Date(Date.now()).toLocaleDateString();
-            // Just for debugging purpose
-            if (date.toLocaleDateString() === todayDate) {
-                console.log("Today Value : ", date.toLocaleDateString());
-            }
 
             result.push({
                 date:

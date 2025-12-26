@@ -74,7 +74,6 @@ function Main() {
     // here i assume there are only two data come in revenue report
     // last month, current month
     const revenueData = useSelector((state) => state.revenueGraph.revenueData);
-    console.log("Data from store of revenue", revenueData);
 
     const { isAuthenticated, loading, session } = useAuth();
 

@@ -16,7 +16,7 @@ function AgentList() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("🔵 useEffect triggered → Fetching agents...");
+    
         fetchAgents();
     }, []);
 
@@ -36,9 +36,9 @@ function AgentList() {
                 client_id: 1,
             };
 
-            console.log("🟡 Fetching agents with payload:", payload);
+        
             const res = await agentApi.agentSearch(payload);
-            console.log("🟢 Agents fetched successfully:", res);
+        
 
             setAgents(res);
         } catch (err) {
@@ -46,7 +46,7 @@ function AgentList() {
             setError("Failed to load agents. Please try again later.");
         } finally {
             setLoading(false);
-            console.log("⚪ Fetch agents completed");
+        
         }
     };
 
@@ -60,7 +60,7 @@ function AgentList() {
     };
 
     const handleEdit = (e, name) => {
-        console.log("handle edit run....");
+    
         e.preventDefault();
         navigate(`/dashboard/edit-agent/${name}`);
     };

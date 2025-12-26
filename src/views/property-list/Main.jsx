@@ -62,7 +62,7 @@ function Main() {
     };
 
     const OriginalPayload = { ...payload, ...data };
-    console.log(`Original Payload data:-`, OriginalPayload);
+  
 
     try {
       const result = await propertyApi.propertySearch(OriginalPayload);
@@ -71,7 +71,7 @@ function Main() {
       setSearchQuery("");
       dispatch(setProperty(result?.data));
 
-      console.log(`Property fetch Successfully ✅`);
+    
     } catch (err) {
       setError(err);
       console.error("Fetch error:", err);
@@ -85,7 +85,7 @@ function Main() {
   }, []);
 
   const handleEdit = (e, id) => {
-    console.log("handle edit run....");
+  
     e.preventDefault();
     navigate(`/dashboard/edit-property/${id}`);
   };
@@ -100,7 +100,7 @@ function Main() {
 
       const response = await propertyApi.deleteProperty(payload);
 
-      console.log(response);
+    
       if (response) {
         toast.success("Property deleted successfully!", {
           position: "top-center",

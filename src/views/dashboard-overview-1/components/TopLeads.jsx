@@ -10,7 +10,7 @@ import image3 from "../../../assets/images/p-3.jpg";
 import { useNavigate } from "react-router-dom";
 
 const TopLeads = () => {
-    console.log("TopLead Render");
+
     const [topLead, setTopLead] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);

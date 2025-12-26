@@ -6,11 +6,11 @@ export const agentValidationSchema = Yup.object({
     address: Yup.string().when("$isEdit", {
         is: true,
         then: (schema) => {
-            console.log("Edit mode validation run");
+            
             schema.notRequired().nullable();
         },
         otherwise: (schema) => {
-            console.log("Create mode validation run");
+            
             schema.required("Address is required");
         },
     }),

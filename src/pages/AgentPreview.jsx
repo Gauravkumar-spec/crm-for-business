@@ -22,10 +22,10 @@ const AgentPreview = () => {
                 client_id: 1,
             };
 
-            console.log("🟡 Fetching agents with payload:", payload);
+        
             const res = await agentApi.agentPreview(payload);
             if (res) {
-                console.log("🟢 Agents fetched successfully:", res.data[0]);
+            
                 setAgentDetails(res.data[0]);
             }
         } catch (err) {
@@ -33,12 +33,12 @@ const AgentPreview = () => {
             setError("Failed to load agents. Please try again later.");
         } finally {
             setLoading(false);
-            console.log("⚪ Fetch agents completed");
+        
         }
     };
 
     useEffect(() => {
-        console.log("🔵 useEffect triggered → Fetching agents...");
+    
         fetchAgentDetails();
     }, []);
 

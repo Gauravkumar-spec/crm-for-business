@@ -143,7 +143,7 @@ const Leads = () => {
             };
 
             const res = await leadApi.createLead(payload);
-            console.log(res, "formsubmit");
+            
             if (res?.message) {
                 toast.success("Lead saved successfully!", {
                     position: "top-center",

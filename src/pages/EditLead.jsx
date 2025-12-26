@@ -23,9 +23,9 @@ function EditLead() {
 
     const navigate = useNavigate();
 
-    console.log("Lead ID: ", id);
+    
     const isEditMode = !!lead?.lead_id;
-    console.log(isEditMode);
+    
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -47,7 +47,7 @@ function EditLead() {
             };
 
             const res = await leadApi.updateLead(payload);
-            console.log("Form submit: ", res);
+            
             if (res) {
                 toast.success("Lead saved successfully!", {
                     position: "top-center",
@@ -60,7 +60,7 @@ function EditLead() {
                 }, 1000);
             }
         } catch (error) {
-            console.log("Failed to update lead", error);
+            
             toast.error("Failed to save lead. Please try again.", {
                 position: "top-center",
                 autoClose: 3000,
@@ -81,12 +81,12 @@ function EditLead() {
             });
 
             if (response) {
-                console.log("Lead data fetched for edit: ", response);
+                
                 setLead(response.data);
             }
         } catch (error) {
             setError(error);
-            console.log("failed to fetch lead", error);
+            
         } finally {
             setIsLoading(false);
         }

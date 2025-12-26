@@ -50,7 +50,6 @@ function Main() {
         };
 
         const OriginalPayload = { ...payload, ...data };
-        console.log(`Original Payload data:-`, OriginalPayload);
 
         try {
             const result = await propertyApi.propertySearch(OriginalPayload);
@@ -59,7 +58,6 @@ function Main() {
             setSearchQuery("");
             dispatch(setProperty(result?.data));
 
-            console.log(`Property fetch Successfully ✅`);
         } catch (err) {
             setError(err);
             console.error("Fetch error:", err);
@@ -73,12 +71,12 @@ function Main() {
     }, []);
 
     const handleEdit = (e, id) => {
-        console.log("handle edit run....");
+        
         e.preventDefault();
         navigate(`/dashboard/edit-property/${id}`);
     };
     const handlePreview = (e, id) => {
-        console.log("handle preview run....");
+    
         e.preventDefault();
         navigate(`/dashboard/product-preview/${id}`);
     };

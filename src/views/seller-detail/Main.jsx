@@ -63,15 +63,15 @@ function Main() {
         };
 
         const OriginalPayload = { ...payload, ...data };
-        console.log(`Original Payload data:-`, OriginalPayload);
+    
 
         try {
             const response = await leadSearch(OriginalPayload).unwrap();
-            console.log(`Response after fetching:-`, response.data);
+           
 
             setLeads(response.data);
         } catch (error) {
-            console.log(`Failed to fetch lead , ${error}`);
+           
             setError("Failed to fetch leads, try again");
         } finally {
             setLoading(false);
@@ -83,7 +83,7 @@ function Main() {
     }, []);
 
     const handleEdit = (e, id) => {
-        console.log("handle edit run....");
+    
         e.preventDefault();
         navigate(`/dashboard/edit-lead/${id}`);
     };
@@ -110,7 +110,7 @@ function Main() {
                 setDeleteConfirmationModal(false);
             }
         } catch (error) {
-            console.log("Error: ", error.message);
+        
             toast.error(error.message, {
                 position: "top-center",
                 autoClose: 3000,

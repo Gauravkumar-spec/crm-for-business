@@ -70,7 +70,6 @@ function Main() {
         }
     };
 
-    console.log("Item: ", items);
 
     return (
         <>

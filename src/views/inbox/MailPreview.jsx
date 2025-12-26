@@ -16,7 +16,6 @@ const MailPreview = () => {
 
     const navigate = useNavigate();
 
-    console.log("Auth provider:- ", authProvider?.options?.account?.idToken);
 
     useEffect(() => {
         let disposed = false;
@@ -89,7 +88,6 @@ const MailPreview = () => {
                         </span>
                     </p>
 
-                    {console.log(msg)}
 
                     <div className="mt-10 prose max-w-none text-gray-800">
                         <MessageRender html={msg?.body.content} />

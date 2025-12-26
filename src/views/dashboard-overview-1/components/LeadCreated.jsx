@@ -88,7 +88,6 @@ function Main(props) {
             const response = await dashboardApi.chartLeadcreated(payload);
 
             if (response) {
-                console.log(response);
 
                 if (response?.period == "weekly") {
                     const data = filterWeeklyData(response?.data);

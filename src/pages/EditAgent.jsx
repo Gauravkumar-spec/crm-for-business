@@ -9,7 +9,7 @@ import ErrorUI from "../components/error-ui/Main.jsx";
 
 function EditAgent() {
     const { agentName } = useParams();
-    console.log("Agent ID: ", agentName);
+
     const navigate = useNavigate();
     const [agent, setAgent] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ function EditAgent() {
                 client_id: 1,
             });
 
-            console.log("Fetch Agent:- ", response.data[0]);
+        
             if (response.data) {
                 setAgent(response.data[0]);
 
@@ -75,7 +75,7 @@ function EditAgent() {
 
             const response = await agentApi.agentUpdate(updateData);
 
-            console.log("Agent updated: ", response);
+        
 
             navigate("/dashboard/agentslist");
         } catch (err) {

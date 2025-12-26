@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
     // Single refresh function - prevents multiple simultaneous calls
     const refreshToken = async () => {
-        console.log("Refresh token run ");
+        
         const sessionId = session?.sessionId || sessionStorage.getItem("sessionId");
         if (!sessionId) return null;
 
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
         refreshPromise.current = (async () => {
             try {
-                console.log("[Auth] Refreshing token...");
+                
                 const data = await refreshSession(sessionId);
 
                 // Update session and storage
@@ -163,7 +163,7 @@ export const AuthProvider = ({ children }) => {
         if (sessionId) {
             try {
                 const res = await logoutService(sessionId);
-                console.log("[Auth] Backend logout:", res.message); // "Logout successful"
+                
             } catch (error) {
                 console.error("[Auth] Logout request failed", err);
             }

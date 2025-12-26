@@ -46,7 +46,7 @@ export const signIn = () => async (dispatch) => {
             prompt: "select_account",
         });
 
-        console.log('Access Token after login :- ', result.accessToken)
+        
 
         if(!localStorage.getItem("mslAccessToken")){
             localStorage.setItem("mslAccessToken", result?.accessToken)

@@ -44,7 +44,7 @@ const LeadPreview = () => {
             const response = await leadApi.leadPreview(payload);
 
             if (response || response.data) {
-                console.log("lead response: ", response.data);
+                
                 setLead(response.data || response?.data);
                 toast.success("Lead Preview fetch successfully!", {
                     position: "top-center",

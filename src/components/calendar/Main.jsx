@@ -27,7 +27,7 @@ function Main(props) {
         return `${year}-${month}-${day}`;
     }
 
-    // console.log("Events", events);
+
 
     async function fetchEvents() {
         setLoading(true);
@@ -36,7 +36,7 @@ function Main(props) {
             const res = await client.api("/me/events").get();
 
             if (res) {
-                // console.log(res.value);
+                
                 res?.value.map((v) => {
                     resultArr.push({
                         title: v.subject,
