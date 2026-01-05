@@ -41,4 +41,12 @@ export const leadApi = {
             throw error?.response?.data || error;
         }
     },
+    leadAssign: async (data) => {
+        try {
+            const response = await axiosInstance.post("leadAssign", data);
+            return response.data;
+        } catch (error) {
+            throw error?.response?.data || error;
+        }
+    },
 };

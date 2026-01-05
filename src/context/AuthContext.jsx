@@ -165,7 +165,7 @@ export const AuthProvider = ({ children }) => {
                 const res = await logoutService(sessionId);
                 
             } catch (error) {
-                console.error("[Auth] Logout request failed", err);
+                console.error("[Auth] Logout request failed", error);
             }
         }
 

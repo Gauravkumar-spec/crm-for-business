@@ -13,40 +13,57 @@ function AgentList() {
     const [error, setError] = useState(null);
     const [hoveredCard, setHoveredCard] = useState(null);
 
+    const [hasMore, setHasMore] = useState(false);
+    const [lastAgentId, setLastAgentId] = useState(null);
+    const [loadingMore, setLoadingMore] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
-    
+        setLastAgentId(null);
         fetchAgents();
     }, []);
 
     const fetchAgents = async () => {
         try {
             setLoading(true);
-            setError(null)
+            setError(null);
             const payload = {
                 status: null,
                 search: null,
                 name: null,
                 email: null,
-                last_agent_id: null,
+                last_agent_id: lastAgentId,
                 limit: 10,
                 sort_by: "name",
                 sort_order: "ASC",
                 client_id: 1,
             };
 
-        
             const res = await agentApi.agentSearch(payload);
-        
 
-            setAgents(res);
+            setAgents((prev) =>
+                lastAgentId ? { ...res, data: [...prev.data, ...res.data] } : res
+            );
+
+            setHasMore(res?.has_more);
+            setLastAgentId(res?.next_last_agent_id);
         } catch (err) {
             console.error("🔴 Failed to fetch agents:", err);
             setError("Failed to load agents. Please try again later.");
         } finally {
             setLoading(false);
-        
+        }
+    };
+
+    const loadMoreAgents = async () => {
+        if (!hasMore) return;
+
+        try {
+            setLoadingMore(true);
+            await fetchAgents();
+        } finally {
+            setLoadingMore(false);
         }
     };
 
@@ -60,7 +77,6 @@ function AgentList() {
     };
 
     const handleEdit = (e, name) => {
-    
         e.preventDefault();
         navigate(`/dashboard/edit-agent/${name}`);
     };
@@ -112,7 +128,7 @@ function AgentList() {
                                     onClick={() =>
                                         navigate(`/dashboard/agent-preview/${agent.name}`)
                                     }
-                                    key={agent?.agent_id}
+                                    key={`${agent?.agent_id}+${index}`}
                                     className="relative group cursor-pointer"
                                     onMouseEnter={() => setHoveredCard(index)}
                                     onMouseLeave={() => setHoveredCard(null)}
@@ -149,8 +165,8 @@ function AgentList() {
                                             <div className="mt-6 flex space-x-2">
                                                 <button
                                                     onClick={(e) => {
-                                                        e.stopPropagation()
-                                                        handleEdit(e, agent?.name)
+                                                        e.stopPropagation();
+                                                        handleEdit(e, agent?.name);
                                                     }}
                                                     className="flex-1 py-2 px-3 bg-gray-200 hover:bg-blue-400 text-gray-900 rounded-lg transition-all"
                                                 >
@@ -158,8 +174,8 @@ function AgentList() {
                                                 </button>
                                                 <button
                                                     onClick={(e) => {
-                                                        e.stopPropagation()
-                                                        handleDelete(agent?.agent_id)
+                                                        e.stopPropagation();
+                                                        handleDelete(agent?.agent_id);
                                                     }}
                                                     className="flex-1 py-2 px-3 bg-gray-200 hover:bg-red-400 text-gray-900 rounded-lg transition-all"
                                                 >
@@ -174,6 +190,19 @@ function AgentList() {
                     </div>
                 )}
             </div>
+
+            {/* Pagination */}
+            {hasMore && (
+                <div className="flex justify-center mt-16">
+                    <button
+                        onClick={loadMoreAgents}
+                        disabled={loadingMore}
+                        className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-400 to-purple-400 text-white font-semibold shadow-lg hover:opacity-90 transition disabled:opacity-50"
+                    >
+                        {loadingMore ? "Loading..." : "Load More Agents"}
+                    </button>
+                </div>
+            )}
 
             <ToastContainer />
         </div>

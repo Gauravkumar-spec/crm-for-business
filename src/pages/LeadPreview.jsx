@@ -22,15 +22,29 @@ import "react-toastify/dist/ReactToastify.css";
 import { leadApi } from "../api/leadApi";
 import ErrorUI from "../components/error-ui/Main.jsx";
 import LoadingUI from "../components/loading-ui/Main.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { agentApi } from "../api/agentApi.js";
 
 const LeadPreview = () => {
     const navigate = useNavigate();
 
     const { id } = useParams();
+    const { session } = useAuth();
 
     const [lead, setLead] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // for pop-up modal
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedAgentEmail, setSelectedAgentEmail] = useState("");
+
+    // for agents
+    const [agents, setAgents] = useState([]);
+    const [agentLastId, setAgentLastId] = useState(null);
+    const [agentHasMore, setAgentHasMore] = useState(false);
+    const [agentLoading, setAgentLoading] = useState(false);
+    const [agentLoadingMore, setAgentLoadingMore] = useState(false);
 
     const fetchLeadPreview = async () => {
         setLoading(true);
@@ -44,7 +58,6 @@ const LeadPreview = () => {
             const response = await leadApi.leadPreview(payload);
 
             if (response || response.data) {
-                
                 setLead(response.data || response?.data);
                 toast.success("Lead Preview fetch successfully!", {
                     position: "top-center",
@@ -64,9 +77,93 @@ const LeadPreview = () => {
         }
     };
 
+    const fetchAgentsForDropdown = async (lastId = null) => {
+        try {
+            setAgentLoading(true);
+
+            const payload = {
+                status: null,
+                search: null,
+                name: null,
+                email: null,
+                last_agent_id: lastId,
+                limit: 10,
+                sort_by: "name",
+                sort_order: "ASC",
+                client_id: 1,
+            };
+
+            const res = await agentApi.agentSearch(payload);
+
+            setAgents((prev) => (lastId ? [...prev, ...res.data] : res.data));
+
+            setAgentHasMore(res?.has_more);
+            setAgentLastId(res?.next_last_agent_id);
+        } catch (error) {
+            console.error("❌ Failed to fetch agents:", error);
+        } finally {
+            setAgentLoading(false);
+        }
+    };
+
+    const loadMoreAgentsForDropdown = async () => {
+        if (!agentHasMore) return;
+        fetchAgentsForDropdown(agentLastId);
+    };
+
+    const assignLead = async () => {
+        try {
+            if (!selectedAgentEmail) {
+                toast.error("Please select an agent email", {
+                    position: "top-center",
+                    theme: "dark",
+                });
+                return;
+            }
+
+            const payload = {
+                lead_id: lead?.lead_id,
+                client_id: 1,
+                agent_emails: [selectedAgentEmail],
+                primary_agent_email: selectedAgentEmail,
+                assigned_by: session.account.username,
+            };
+
+            await leadApi.leadAssign(payload);
+
+            toast.success("Lead assigned successfully!", {
+                position: "top-center",
+                autoClose: 3000,
+                theme: "dark",
+            });
+
+            setShowAssignModal(false);
+            setSelectedAgentEmail("");
+
+            // Refresh lead preview so Assigned Agent card updates
+            fetchLeadPreview();
+        } catch (error) {
+            console.error("❌ Assign lead failed:", error);
+
+            toast.error(error?.response?.data?.message || "Failed to assign lead", {
+                position: "top-center",
+                autoClose: 3000,
+                theme: "dark",
+            });
+        }
+    };
+
     useEffect(() => {
         fetchLeadPreview();
     }, [id]);
+
+    useEffect(() => {
+        if (showAssignModal) {
+            setAgents([]);
+            setAgentLastId(null);
+            fetchAgentsForDropdown(null); // 👈 explicitly reset pagination
+        }
+    }, [showAssignModal]);
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -82,7 +179,6 @@ const LeadPreview = () => {
                 return "bg-gray-100 text-gray-800";
         }
     };
-
 
     if (loading) {
         return <LoadingUI message="Loading Lead" />;
@@ -116,22 +212,29 @@ const LeadPreview = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-                                    <span className="text-lg font-semibold-">Lead Status: </span>
-                                    <span
-                                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                                            lead?.status
-                                        )}`}
-                                    >
-                                        {lead?.status}
-                                    </span>
-                                    {/* <button
-                                        onClick={handleEdit}
-                                        className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
-                                    >
-                                        <FiEdit className="mr-2" />
-                                        Edit Lead
-                                    </button> */}
+                                <div className="flex flex-col gap-2 mt-4 sm:mt-0">
+                                    <div className="flex gap-2 items-center justify-center">
+                                        <span className="text-sm font-semibold">Lead Status:</span>
+
+                                        <span
+                                            className={`px-5 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                                                lead?.status
+                                            )}`}
+                                        >
+                                            {lead?.status}
+                                        </span>
+                                    </div>
+
+                                    {/* Assign Lead Button */}
+                                    {!lead?.primary_agent && (
+                                        <button
+                                            onClick={() => setShowAssignModal(true)}
+                                            className="bg-white text-indigo-900 hover:bg-indigo-100 px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+                                        >
+                                            <FiUser className="mr-2" />
+                                            Assign Agent
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -339,8 +442,82 @@ const LeadPreview = () => {
 
                         {/* Right Column - Quick Actions & Summary */}
                         <div className="space-y-8">
-                            {/* Summary Card */}
+                            {/* Assigned Agent Card */}
                             <div className="bg-white dark:bg-darkmode-700 rounded-2xl shadow-lg p-6">
+                                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">
+                                    Assigned Agent
+                                </h3>
+
+                                {lead?.primary_agent ? (
+                                    <div className="space-y-4">
+                                        {/* Primary Agent */}
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                                                    <FiStar className="text-indigo-600 w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                        Primary Agent
+                                                    </p>
+                                                    <p className="font-medium text-slate-800 dark:text-slate-200 capitalize">
+                                                        {lead?.primary_agent || "Not assigned"}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {lead?.primary_agent && (
+                                                <span className="px-2 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
+                                                    Primary
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Assigned Agents */}
+                                        <div>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                                                Assigned Agents
+                                            </p>
+
+                                            {lead?.assigned_agents?.length > 0 ? (
+                                                <div className="flex flex-wrap gap-2">
+                                                    {lead.assigned_agents.map((agent, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="px-3 py-1 bg-slate-100 dark:bg-darkmode-600 text-slate-700 dark:text-slate-200 rounded-full text-sm capitalize"
+                                                        >
+                                                            {agent}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-slate-400">
+                                                    No agents assigned
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center space-x-3">
+                                            <FiPhone className="text-green-600 w-5 h-5" />
+                                            <span>{lead?.agent?.phone || "No Phone No."}</span>
+                                        </div>
+
+                                        <div className="flex items-center space-x-3">
+                                            <FiMail className="text-purple-600 w-5 h-5" />
+                                            <span>{lead?.agent?.email || "No Email"}</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-6">
+                                        <p className="text-slate-500 text-sm">
+                                            No agent assigned yet
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Summary Card */}
+                            {/* <div className="bg-white dark:bg-darkmode-700 rounded-2xl shadow-lg p-6">
                                 <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4">
                                     Lead Summary
                                 </h3>
@@ -368,7 +545,7 @@ const LeadPreview = () => {
                                         <span className="text-sm text-slate-500">2 days ago</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Quick Actions */}
                             <div className="bg-white dark:bg-darkmode-700 rounded-2xl shadow-lg p-6">
@@ -432,7 +609,74 @@ const LeadPreview = () => {
                         >
                             Back to List
                         </button>
-                       
+                    </div>
+                </div>
+            )}
+
+            {/* pop for agent assigned  */}
+            {showAssignModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-white dark:bg-darkmode-700 rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+                        {/* Modal Header */}
+                        <div className="mb-6 text-center">
+                            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                                Assign Lead to Agent
+                            </h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                                Select an agent email to assign this lead
+                            </p>
+                        </div>
+
+                        {/* Email Dropdown */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Agent Email
+                            </label>
+
+                            <select
+                                value={selectedAgentEmail}
+                                onChange={(e) => setSelectedAgentEmail(e.target.value)}
+                                className="w-full rounded-lg border border-slate-300 dark:border-darkmode-400 bg-white dark:bg-darkmode-600 px-4 py-3 text-slate-800 dark:text-slate-200"
+                            >
+                                <option value="">Select agent email</option>
+
+                                {agents.map((agent, index) => (
+                                    <option key={`${agent?.agent_id}+${index}`} value={agent.email}>
+                                        {agent.email}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* Load More inside dropdown area */}
+                            {agentHasMore && (
+                                <button
+                                    type="button"
+                                    onClick={loadMoreAgentsForDropdown}
+                                    disabled={agentLoadingMore}
+                                    className="mt-3 text-sm text-indigo-600 hover:underline disabled:opacity-50"
+                                >
+                                    {agentLoadingMore ? "Loading more..." : "Load more agents"}
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={() => setShowAssignModal(false)}
+                                className="px-5 py-2 rounded-lg border border-slate-300 dark:border-darkmode-400 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-darkmode-600"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                disabled={!selectedAgentEmail}
+                                className="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium"
+                                onClick={() => assignLead()}
+                            >
+                                Assign
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
