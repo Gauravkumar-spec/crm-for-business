@@ -1,9 +1,15 @@
 // src/components/ProtectedRoute.jsx
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { ROLE_HOME, ROUTE_PERMISSIONS } from "../router/routePermission";
+
+export const user = {
+    role: "agent",
+};
 
 export default function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth();
+    const { pathname } = useLocation();
 
     if (loading) {
         return (
@@ -20,5 +26,27 @@ export default function ProtectedRoute({ children }) {
         );
     }
 
-    return isAuthenticated ? children : <Navigate to="/" replace />;
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
+
+    // 🔥 admin override
+    if (user.role === "admin") {
+        return children;
+    }
+
+    // If user is agent and trying to access admin-only dashboard root
+    if (user.role === "agent" && pathname === "/dashboard") {
+        return <Navigate to={ROLE_HOME.agent} replace />;
+    }
+
+    const rule = ROUTE_PERMISSIONS.find((r) => r.pattern.test(pathname));
+
+    console.log("rule: ", rule);
+
+    if (rule && !rule.roles.includes(user.role)) {
+        return <Navigate to="/unauthorized" replace />;
+    }
+
+    return children;
 }
