@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { restoreSession } from "./stores/slices/appSlice.js";
 import { ensureMsalInitialized } from "./stores/msalInstance.js";
+import { PermissionProvider } from "./context/PermissionContext.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -22,10 +23,12 @@ function App() {
         <RecoilRoot>
             <div className="app-wrapper">
                 <AuthProvider>
-                    <BrowserRouter>
-                        <Router />
-                        <ScrollToTop />
-                    </BrowserRouter>
+                    <PermissionProvider>
+                        <BrowserRouter>
+                            <Router />
+                            <ScrollToTop />
+                        </BrowserRouter>
+                    </PermissionProvider>
                 </AuthProvider>
             </div>
         </RecoilRoot>

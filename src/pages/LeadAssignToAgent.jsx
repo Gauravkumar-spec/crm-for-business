@@ -7,6 +7,7 @@ const LeadAssignToAgent = () => {
                 <p className="text-gray-500 text-sm">
                     Lead assignment interface will be added here.
                 </p>
+                <h1 className="text-3xl text-red-300 font-semibold mt-10">I don't know why am i build this page</h1>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { PERMISSIONS } from "../constants/permission.js";
 
 const sideMenu = atom({
     key: "sideMenu",
@@ -7,20 +8,20 @@ const sideMenu = atom({
             {
                 icon: "Home",
                 title: "Dashboard",
-                roles: ["admin"], // hide for agent
+                permission: PERMISSIONS.ADMIN_ONLY,
 
                 subMenu: [
                     {
                         icon: "Dashboard",
                         pathname: "/dashboard",
                         title: "Dashboard",
-                        roles: ["admin"],
+                        permission: PERMISSIONS.ADMIN_ONLY,
                     },
                     {
                         icon: "Report",
                         pathname: "/dashboard/graphs",
                         title: "Reports",
-                        roles: ["admin"],
+                        permission: PERMISSIONS.ADMIN_ONLY,
                     },
                 ],
             },
@@ -28,25 +29,25 @@ const sideMenu = atom({
                 icon: "CreditCard",
                 pathname: "/dashboard/add-property",
                 title: "Add Property",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
             {
                 icon: "CreditCard",
                 pathname: "",
                 title: "Property",
-                roles: ["admin", "agent"],
+                permission: PERMISSIONS.MANAGE_LISTINGS,
                 subMenu: [
                     {
                         icon: "",
                         pathname: "/dashboard/product-list",
                         title: "Property List",
-                        roles: ["admin", "agent"],
+                        permission: PERMISSIONS.MANAGE_LISTINGS,
                     },
                     {
                         icon: "",
                         pathname: "/dashboard/product-grid",
                         title: "Property Grid",
-                        roles: ["admin", "agent"],
+                        permission: PERMISSIONS.MANAGE_LISTINGS,
                     },
                 ],
             },
@@ -54,59 +55,59 @@ const sideMenu = atom({
                 icon: "Box",
                 pathname: "/dashboard/create-lead",
                 title: "Leads",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
             {
                 icon: "Users",
                 pathname: "/dashboard/leads",
                 title: "Lead List",
-                roles: ["admin"],
+                permission: PERMISSIONS.MANAGE_LEADS,
                 subMenu: [
                     {
                         icon: "",
                         pathname: "/dashboard/lead-list",
                         title: "Lead List",
-                        roles: ["admin"],
+                        permission: PERMISSIONS.MANAGE_LEADS,
                     },
                     {
                         icon: "",
                         pathname: "/dashboard/lead-detail",
                         title: "Lead Detail",
-                        roles: ["admin"],
+                        permission: PERMISSIONS.MANAGE_LEADS,
                     },
                 ],
             },
             {
-                icon: "HardDrive",
+                icon: "Users",
                 pathname: "/dashboard/agents",
                 title: "Agents",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
             {
                 icon: "Box",
                 pathname: "/dashboard/agentslist",
                 title: "Agents List",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
 
             {
                 icon: "Inbox",
                 pathname: "/dashboard/inbox",
                 title: "Inbox",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
             {
                 icon: "Calendar",
                 pathname: "/dashboard/calendar",
                 title: "Calendar",
-                roles: ["admin"],
+                permission: PERMISSIONS.ADMIN_ONLY,
             },
             {
                 icon: "Users",
                 pathname: "/dashboard/assign-lead",
                 title: "Assign Lead",
-                roles: ["agent"],
-            }
+                permission: PERMISSIONS.ADMIN_ONLY,
+            },
         ],
     },
 });

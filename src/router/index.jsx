@@ -36,6 +36,8 @@ import MailPreview from "../views/inbox/MailPreview.jsx";
 import AgentPreview from "../pages/AgentPreview.jsx";
 import Unauthorized from "../pages/unAuthorized.jsx";
 import LeadAssignToAgent from "../pages/LeadAssignToAgent.jsx";
+import DashboardIndexRedirect from "../pages/DashboardIndexRedirect.jsx";
+import { PERMISSIONS } from "../constants/permission.js";
 
 function Router() {
     const routes = [
@@ -51,131 +53,258 @@ function Router() {
                 </ProtectedRoute>
             ),
             children: [
-                { index: true, element: <DashboardOverview1 /> },
+                {
+                    index: true,
+                    element: (
+                        <ProtectedRoute permission={PERMISSIONS.ADMIN_ONLY}>
+                            <DashboardOverview1 />
+                        </ProtectedRoute>
+                    ),
+                },
                 {
                     path: "graphs",
-                    element: <Graphs />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Graphs />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/leadConversion",
-                    element: <LeadConverion />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <LeadConverion />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/agentPerformance",
-                    element: <AgentPerformance />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <AgentPerformance />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/leadSource",
-                    element: <LeadSource />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <LeadSource />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/revenueTrend",
-                    element: <RevenueTrend />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <RevenueTrend />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/leadCreated",
-                    element: <LeadCreated />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <LeadCreated />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "graph/chartLeadFollowUp",
-                    element: <ChartLeadFollowUp />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <ChartLeadFollowUp />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "activitylog",
-                    element: <ActivityLog />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <ActivityLog />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "compose-mail",
-                    element: <ComposeMail />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <ComposeMail />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "mail-preview/:id",
-                    element: <MailPreview />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <MailPreview />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "product-list",
-                    element: <PropertyList />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "product-grid",
-                    element: <PropertyGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyGrid />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "upload-excel",
-                    element: <UploadExcelPage />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <UploadExcelPage />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "upload-excel2",
-                    element: <UploadExcelPage2 />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <UploadExcelPage2 />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "view-excel",
-                    element: <ViewExcelPage />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <ViewExcelPage />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "product-preview/:id",
-                    element: <PropertyPreview />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyPreview />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "lead-list",
-                    element: <LeadList />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-detail",
-                    element: <LeadGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadGrid />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-preview/:id",
-                    element: <LeadPreview />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadPreview />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "inbox",
-                    element: <Inbox />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Inbox />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "agents",
-                    element: <Agents />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Agents />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "agentslist",
-                    element: <AgentList />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <AgentList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "edit-agent/:agentName",
-                    element: <EditAgent />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <EditAgent />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "agent-preview/:agentName",
-                    element: <AgentPreview />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <AgentPreview />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "calendar",
-                    element: <Calendar />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Calendar />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "add-property",
-                    element: <CreateProperty />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateProperty />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "edit-property/:id",
-                    element: <CreateProperty />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateProperty />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "create-lead",
-                    element: <CreateLeads />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateLeads />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "edit-lead/:id",
-                    element: <EditLead />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <EditLead />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "assign-lead",
-                    element: <LeadAssignToAgent />,
+                    element: (
+                        <ProtectedRoute permission="update_status">
+                            <LeadAssignToAgent />
+                        </ProtectedRoute>
+                    ),
                 },
             ],
         },
@@ -189,54 +318,102 @@ function Router() {
             ),
             children: [
                 {
+                    index: true,
+                    element: <DashboardIndexRedirect basePath="/simple-menu" />,
+                },
+                {
                     path: "dashboard-overview-1",
-                    element: <DashboardOverview1 />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <DashboardOverview1 />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "product-list",
-                    element: <PropertyList />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "product-grid",
-                    element: <PropertyGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyGrid />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "lead-list",
-                    element: <LeadList />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-detail",
-                    element: <LeadGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadGrid />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-preview/:id",
-                    element: <LeadPreview />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadPreview />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "inbox",
-                    element: <Inbox />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Inbox />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "calendar",
-                    element: <Calendar />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Calendar />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "add-property",
-                    element: <CreateProperty />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateProperty />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
-                    path: "leads",
-                    element: <CreateLeads />,
+                    path: "create-lead",
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateLeads />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "assign-lead",
-                    element: <LeadAssignToAgent />,
+                    element: (
+                        <ProtectedRoute permission="update_status">
+                            <LeadAssignToAgent />
+                        </ProtectedRoute>
+                    ),
                 },
             ],
         },
@@ -250,54 +427,102 @@ function Router() {
             ),
             children: [
                 {
+                    index: true,
+                    element: <DashboardIndexRedirect basePath="/top-menu" />,
+                },
+                {
                     path: "dashboard-overview-1",
-                    element: <DashboardOverview1 />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <DashboardOverview1 />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "product-list",
-                    element: <PropertyList />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "product-grid",
-                    element: <PropertyGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_listings">
+                            <PropertyGrid />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "lead-list",
-                    element: <LeadList />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadList />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-detail",
-                    element: <LeadGrid />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadGrid />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "lead-preview/:id",
-                    element: <LeadPreview />,
+                    element: (
+                        <ProtectedRoute permission="manage_leads">
+                            <LeadPreview />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "inbox",
-                    element: <Inbox />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Inbox />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "calendar",
-                    element: <Calendar />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <Calendar />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
                     path: "add-property",
-                    element: <CreateProperty />,
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateProperty />
+                        </ProtectedRoute>
+                    ),
                 },
 
                 {
-                    path: "leads",
-                    element: <CreateLeads />,
+                    path: "create-lead",
+                    element: (
+                        <ProtectedRoute permission="__admin__">
+                            <CreateLeads />
+                        </ProtectedRoute>
+                    ),
                 },
                 {
                     path: "assign-lead",
-                    element: <LeadAssignToAgent />,
+                    element: (
+                        <ProtectedRoute permission="update_status">
+                            <LeadAssignToAgent />
+                        </ProtectedRoute>
+                    ),
                 },
             ],
         },
