@@ -61,7 +61,7 @@ function PropertyListingForm() {
 
     const [editData, setEditData] = useState(null);
 
-    const isEditMode = Boolean(editData?.property_id);
+    const isEditMode = Boolean(id);
 
     const [currentStep, setCurrentStep] = useState(1);
     const [imageFiles, setImageFiles] = useState([]);
@@ -161,7 +161,7 @@ function PropertyListingForm() {
                 setFurnishingOptions(furnishingOptionsRes?.data || furnishingOptionsRes || []);
                 setParkingOptions(parkingOptionsRes?.data || parkingOptionsRes || []);
                 setAvailabilityOptions(
-                    availabilityOptionsRes?.data || availabilityOptionsRes || []
+                    availabilityOptionsRes?.data || availabilityOptionsRes || [],
                 );
                 setBrokerageOptions(brokerageOptionsRes?.data || brokerageOptionsRes || []);
                 setFacilitiesList(facilitiesListRes?.data || facilitiesListRes || []);
@@ -300,7 +300,7 @@ function PropertyListingForm() {
     const nextStep = () => setCurrentStep((prev) => prev + 1);
     const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    const onSubmitProperty = async (values, { setSubmitting, resetForm }) => {
         if (isPreview) {
             return;
         }
@@ -337,15 +337,18 @@ function PropertyListingForm() {
             };
 
             let res;
-            if (editData?.property_id) {
+
+            if (id) {
+                // UPDATE
                 res = await propertyApi.updateProperty({
                     ...payload,
-                    property_id: editData.property_id,
+                    property_id: id,
                 });
             } else {
+                // CREATE
                 res = await propertyApi.createProperty(payload);
             }
-            
+
             if (res?.message) {
                 toast.success("Property saved successfully!", {
                     position: "top-center",
@@ -366,29 +369,24 @@ function PropertyListingForm() {
                     position: "top-center",
                     autoClose: 3000,
                     theme: "dark",
-                }
+                },
             );
             console.error("Error details:", err?.data || err?.error || err);
-           
         } finally {
             setSubmitting(false);
         }
     };
 
     useEffect(() => {
-       
-
         if (id) {
-            
             (async () => {
                 try {
                     const response = await propertyApi.propertyPreview({
                         property_id: id,
                         client_id: 1,
                     });
-                    
+
                     if (response) {
-                    
                         setEditData(response);
                     }
                 } catch (err) {
@@ -405,8 +403,8 @@ function PropertyListingForm() {
                     {isPreview
                         ? "Property Preview"
                         : editData
-                        ? "Edit Property"
-                        : "Add New Property"}
+                          ? "Edit Property"
+                          : "Add New Property"}
                 </h2>
             </div>
 
@@ -453,12 +451,12 @@ function PropertyListingForm() {
                                 {step === 1
                                     ? "Basic Details"
                                     : step === 2
-                                    ? "Pricing & Features"
-                                    : step === 3
-                                    ? "Amenities"
-                                    : step === 4
-                                    ? "Media"
-                                    : "Review & Submit"}
+                                      ? "Pricing & Features"
+                                      : step === 3
+                                        ? "Amenities"
+                                        : step === 4
+                                          ? "Media"
+                                          : "Review & Submit"}
                             </div>
                         </div>
                     ))}
@@ -477,8 +475,8 @@ function PropertyListingForm() {
                                 validateOnChange={false}
                                 validateOnBlur={true}
                                 context={{ isEditMode }}
-                                onSubmit={handleSubmit}
-                                key={`${isPreview}-${!!previewData}-${!!editData}`}
+                                onSubmit={onSubmitProperty}
+                                key={id || "create"}
                                 enableReinitialize
                             >
                                 {({
@@ -488,7 +486,6 @@ function PropertyListingForm() {
                                     errors,
                                     touched,
                                     handleChange,
-                                    handleSubmit,
                                 }) => (
                                     <Form>
                                         {/* Step 1: Property Details */}
@@ -1218,12 +1215,12 @@ function PropertyListingForm() {
                                                                         toggleFacility(
                                                                             facility,
                                                                             values,
-                                                                            setFieldValue
+                                                                            setFieldValue,
                                                                         )
                                                                     }
                                                                     className={`px-3 py-1 rounded-full text-sm flex items-center ${
                                                                         values.facilities.includes(
-                                                                            facility.name
+                                                                            facility.name,
                                                                         )
                                                                             ? "bg-primary text-white border border-primary"
                                                                             : "bg-slate-100 text-slate-600 dark:bg-darkmode-400 dark:text-slate-400 border border-slate-200 dark:border-darkmode-400"
@@ -1232,7 +1229,7 @@ function PropertyListingForm() {
                                                                 >
                                                                     {facility.name}
                                                                     {values.facilities.includes(
-                                                                        facility.name
+                                                                        facility.name,
                                                                     ) && (
                                                                         <FiCheckCircle className="ml-1" />
                                                                     )}
@@ -1300,7 +1297,7 @@ function PropertyListingForm() {
                                                                 onChange={(e) =>
                                                                     handleImageChange(
                                                                         e,
-                                                                        setFieldValue
+                                                                        setFieldValue,
                                                                     )
                                                                 }
                                                                 className="hidden"
@@ -1336,7 +1333,7 @@ function PropertyListingForm() {
                                                                                 onClick={() =>
                                                                                     removeImage(
                                                                                         idx,
-                                                                                        setFieldValue
+                                                                                        setFieldValue,
                                                                                     )
                                                                                 }
                                                                                 className="absolute top-2 right-2 bg-danger text-white rounded-full p-1 hover:bg-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1595,7 +1592,7 @@ function PropertyListingForm() {
                                                                                 <FiCheck className="mr-1" />{" "}
                                                                                 {facility}
                                                                             </span>
-                                                                        )
+                                                                        ),
                                                                     )}
                                                                 </div>
                                                             ) : (
@@ -1670,7 +1667,7 @@ function PropertyListingForm() {
                                                     <button
                                                         type="submit"
                                                         disabled={isSubmitting}
-                                                        className="btn btn-primary w-24 ml-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
+                                                        className="btn btn-primary w-30 ml-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center"
                                                     >
                                                         {isSubmitting ? (
                                                             <>

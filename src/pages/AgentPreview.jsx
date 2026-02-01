@@ -11,21 +11,19 @@ const AgentPreview = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const fetchAgentDetails = async () => {
         try {
             setLoading(true);
-            setError(null)
+            setError(null);
             const payload = {
                 name: agentName,
                 client_id: 1,
             };
 
-        
             const res = await agentApi.agentPreview(payload);
             if (res) {
-            
                 setAgentDetails(res.data[0]);
             }
         } catch (err) {
@@ -33,12 +31,10 @@ const AgentPreview = () => {
             setError("Failed to load agents. Please try again later.");
         } finally {
             setLoading(false);
-        
         }
     };
 
     useEffect(() => {
-    
         fetchAgentDetails();
     }, []);
 
@@ -92,8 +88,8 @@ const AgentPreview = () => {
                             star <= Math.floor(rating)
                                 ? "text-yellow-400 fill-current"
                                 : star === Math.ceil(rating) && !Number.isInteger(rating)
-                                ? "text-yellow-400 fill-current opacity-50"
-                                : "text-gray-300"
+                                  ? "text-yellow-400 fill-current opacity-50"
+                                  : "text-gray-300"
                         }`}
                     />
                 ))}
@@ -217,16 +213,17 @@ const AgentPreview = () => {
                                     Permissions
                                 </label>
                                 <div className="flex flex-wrap gap-1">
-                                    {agentDetails?.direct_permissions
-                                        .split(", ")
-                                        .map((permission, index) => (
-                                            <span
-                                                key={index}
-                                                className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
-                                            >
-                                                {permission}
-                                            </span>
-                                        ))}
+                                    {agentDetails?.direct_permissions !== null &&
+                                        agentDetails?.direct_permissions
+                                            .split(", ")
+                                            .map((permission, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm"
+                                                >
+                                                    {permission}
+                                                </span>
+                                            ))}
                                 </div>
                             </div>
                         </div>

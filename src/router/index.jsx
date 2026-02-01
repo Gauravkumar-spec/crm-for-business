@@ -35,7 +35,6 @@ import ComposeMail from "../views/inbox/ComposeMail.jsx";
 import MailPreview from "../views/inbox/MailPreview.jsx";
 import AgentPreview from "../pages/AgentPreview.jsx";
 import Unauthorized from "../pages/unAuthorized.jsx";
-import LeadAssignToAgent from "../pages/LeadAssignToAgent.jsx";
 import DashboardIndexRedirect from "../pages/DashboardIndexRedirect.jsx";
 import { PERMISSIONS } from "../constants/permission.js";
 
@@ -298,14 +297,6 @@ function Router() {
                         </ProtectedRoute>
                     ),
                 },
-                {
-                    path: "assign-lead",
-                    element: (
-                        <ProtectedRoute permission="update_status">
-                            <LeadAssignToAgent />
-                        </ProtectedRoute>
-                    ),
-                },
             ],
         },
         // Simple menu Routes
@@ -407,14 +398,6 @@ function Router() {
                         </ProtectedRoute>
                     ),
                 },
-                {
-                    path: "assign-lead",
-                    element: (
-                        <ProtectedRoute permission="update_status">
-                            <LeadAssignToAgent />
-                        </ProtectedRoute>
-                    ),
-                },
             ],
         },
         // Top menu Routes
@@ -513,14 +496,6 @@ function Router() {
                     element: (
                         <ProtectedRoute permission="__admin__">
                             <CreateLeads />
-                        </ProtectedRoute>
-                    ),
-                },
-                {
-                    path: "assign-lead",
-                    element: (
-                        <ProtectedRoute permission="update_status">
-                            <LeadAssignToAgent />
                         </ProtectedRoute>
                     ),
                 },

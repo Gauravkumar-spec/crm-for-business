@@ -33,7 +33,7 @@ export default function ProtectedRoute({ children, permission }) {
     }
 
     // 🔥 ADMIN: full access (short-circuit)
-    if (role.toLowerCase() === "admin") {
+    if (role && role.toLowerCase() === "admin") {
         return children;
     }
 

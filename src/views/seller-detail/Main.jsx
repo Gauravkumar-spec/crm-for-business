@@ -19,18 +19,29 @@ import LoaderUI from "../../components/loading-ui/Main.jsx";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { leadApi } from "../../api/leadApi.js";
+import { usePermission } from "../../context/PermissionContext";
+import { useAuth } from "../../context/AuthContext";
 
 function Main() {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = useState(false);
     const [leadSearch] = useLeadSearchMutation();
     const [leads, setLeads] = useState([]);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [error, setError] = useState(null);
     const [deleteLeadId, setDeleteLeadId] = useState(null);
 
+    const [lastLeadId, setLastLeadId] = useState(null);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+
+    const { role } = usePermission();
+    const { session } = useAuth();
+
+    const agentEmail = session?.account?.idTokenClaims?.emails?.[0];
 
     const handleKeyDown = (event) => {
         if (event.key == "Enter") {
@@ -39,14 +50,25 @@ function Main() {
         // You can access other properties of the event object, like event.keyCode, event.code, etc.
     };
 
-    const fetchLead = async (data = {}) => {
-        setLoading(true);
+    const fetchLead = async (data = {}, isLoadMore = false) => {
         setError(null);
-        const payload = {
+
+        if (role?.toLowerCase() === "agent" && !agentEmail) {
+            setError("Agent identity not found");
+            return;
+        }
+
+        // 🚫 Prevent duplicate calls
+        if (isLoadMore && isLoadingMore) return;
+        if (!isLoadMore && loading) return;
+
+        isLoadMore ? setIsLoadingMore(true) : setLoading(true);
+
+        const basePayload = {
             search: null,
             client_id: 1,
             lead_id: null,
-            name: "First lead",
+            name: null,
             mobile: null,
             email: null,
             budget_min: null,
@@ -54,36 +76,45 @@ function Main() {
             preferred_location: null,
             property_type: null,
             status: null,
-            assigned_agent: null,
             source: null,
-            last_lead_id: null,
             limit: 15,
             sort_by: "created_at",
             sort_order: "DESC",
         };
 
-        const OriginalPayload = { ...payload, ...data };
-    
+        const OriginalPayload = {
+            ...basePayload,
+            ...data,
+            last_lead_id: isLoadMore ? lastLeadId : null,
+
+            // 🔐 LOCKED role logic
+            assigned_agent: role?.toLowerCase() === "agent" ? agentEmail : null,
+        };
 
         try {
             const response = await leadSearch(OriginalPayload).unwrap();
-           
 
-            setLeads(response.data);
+            setLeads((prev) => (isLoadMore ? [...prev, ...response.data] : response.data));
+
+            setLastLeadId(response.next_last_lead_id);
+            setHasMore(response.has_more);
         } catch (error) {
-           
-            setError("Failed to fetch leads, try again");
+            setError(error?.data?.message || "Failed to fetch leads, try again");
         } finally {
-            setLoading(false);
+            isLoadMore ? setIsLoadingMore(false) : setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchLead();
-    }, []);
+        if (!role) return;
+        if (role?.toLowerCase() === "agent" && !agentEmail) return;
+
+        setLastLeadId(null);
+        setHasMore(true);
+        fetchLead({}, false);
+    }, [role, agentEmail]);
 
     const handleEdit = (e, id) => {
-    
         e.preventDefault();
         navigate(`/dashboard/edit-lead/${id}`);
     };
@@ -100,17 +131,18 @@ function Main() {
             });
 
             if (response) {
-                toast.success("Property saved successfully!", {
+                toast.success("Lead deleted successfully!", {
                     position: "top-center",
                     autoClose: 3000,
                     theme: "dark",
                 });
 
-                await fetchLead();
+                setLastLeadId(null);
+                setHasMore(true);
+                await fetchLead({}, false);
                 setDeleteConfirmationModal(false);
             }
         } catch (error) {
-        
             toast.error(error.message, {
                 position: "top-center",
                 autoClose: 3000,
@@ -122,8 +154,7 @@ function Main() {
         }
     };
 
-    if (error) {
-        console.warn("⚠️ Error UI shown:", error);
+    if (error && leads.length === 0) {
         return <ErrorUI handlerFunc={fetchLead} />;
     }
 
@@ -135,29 +166,9 @@ function Main() {
         <>
             <div className="intro-y flex flex-col sm:flex-row items-center mt-8">
                 <h2 className="text-lg font-medium mr-auto">Lead Inventory</h2>
-                {/* <div className="w-full sm:w-auto flex mt-4 sm:mt-0">
-                    <button className="btn btn-primary shadow-md mr-2">Print</button>
-                    <Dropdown className="ml-auto sm:ml-0">
-                        <DropdownToggle className="btn px-2 box">
-                            <span className="w-5 h-5 flex items-center justify-center">
-                                <Lucide icon="Plus" className="w-4 h-4" />
-                            </span>
-                        </DropdownToggle>
-                        <DropdownMenu className="w-40">
-                            <DropdownContent>
-                                <DropdownItem>
-                                    <Lucide icon="File" className="w-4 h-4 mr-2" /> Export Word
-                                </DropdownItem>
-                                <DropdownItem>
-                                    <Lucide icon="File" className="w-4 h-4 mr-2" /> Export PDF
-                                </DropdownItem>
-                            </DropdownContent>
-                        </DropdownMenu>
-                    </Dropdown>
-                </div> */}
             </div>
             {/* BEGIN: Seller Details */}
-            <div className="intro-y grid grid-cols-11 gap-5 mt-5">
+            <div className="intro-y grid grid-cols-12 gap-5 mt-5">
                 <div className="col-span-12 lg:col-span-4 2xl:col-span-3">
                     <div className="box p-5 rounded-md">
                         <div className="flex items-center border-b border-slate-200/60 dark:border-darkmode-400 pb-5 mb-5">
@@ -302,11 +313,13 @@ function Main() {
                                                 className="rounded-md"
                                                 src={leadImage}
                                             />
-                                            <template v-if="faker.trueFalse[0]">
-                                                <span className="absolute top-0 bg-pending/80 text-white text-xs m-5 px-2 py-1 rounded z-10">
-                                                    Featured
+
+                                            {lead?.status && (
+                                                <span className="absolute top-0 bg-blue-600 text-white text-xs m-5 px-2 py-1 rounded z-10">
+                                                    {lead?.status}
                                                 </span>
-                                            </template>
+                                            )}
+
                                             <div className="absolute bottom-0 text-white px-5 pb-6 z-10">
                                                 <a href="" className="block font-medium text-base">
                                                     {lead?.name}
@@ -361,65 +374,18 @@ function Main() {
                             </div>
                         ))}
                     </div>
-                    {/* BEGIN: Pagination */}
-                    <div className="intro-y col-span-11 flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-6">
-                        <nav className="w-full sm:w-auto sm:mr-auto">
-                            <ul className="pagination">
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        <Lucide icon="ChevronsLeft" className="w-4 h-4" />
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        <Lucide icon="ChevronLeft" className="w-4 h-4" />
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        ...
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        1
-                                    </a>
-                                </li>
-                                <li className="page-item active">
-                                    <a className="page-link" href="#">
-                                        2
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        3
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        ...
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        <Lucide icon="ChevronRight" className="w-4 h-4" />
-                                    </a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">
-                                        <Lucide icon="ChevronsRight" className="w-4 h-4" />
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <select className="w-20 form-select box mt-3 sm:mt-0">
-                            <option>10</option>
-                            <option>25</option>
-                            <option>35</option>
-                            <option>50</option>
-                        </select>
-                    </div>
-                    {/* END: Pagination */}
+
+                    {hasMore && (
+                        <div className="flex justify-center mt-6">
+                            <button
+                                disabled={isLoadingMore}
+                                onClick={() => fetchLead({}, true)}
+                                className="btn btn-outline-primary px-6"
+                            >
+                                {isLoadingMore ? "Loading..." : "Load More"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             {/* END: Seller Details */}
